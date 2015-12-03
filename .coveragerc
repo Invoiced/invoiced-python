@@ -1,0 +1,3 @@
+[run]
+source = invoiced
+omit = */test/*

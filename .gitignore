@@ -1,0 +1,9 @@
+/.eggs
+/invoiced.egg-info
+/build
+/dist
+/htmlcov
+*.pyc
+*.egg
+.coverage
+example.py
