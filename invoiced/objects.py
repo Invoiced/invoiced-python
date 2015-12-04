@@ -78,12 +78,9 @@ class Transaction(CreateableObject, DeleteableObject, ListableObject,
 
 class Subscription(CreateableObject, DeleteableObject, ListableObject,
                    UpdateableObject):
-    pass
 
-
-class Plan(CreateableObject, DeleteableObject, ListableObject,
-           UpdateableObject):
-    pass
+    def cancel(self):
+        return self.delete()
 
 
 class Email(InvoicedObject):

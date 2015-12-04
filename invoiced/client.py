@@ -1,7 +1,8 @@
 from invoiced.objects import (
     Customer,
     Invoice,
-    Transaction)
+    Transaction,
+    Subscription)
 from invoiced import errors, util, version
 import json
 import requests
@@ -17,6 +18,7 @@ class Client(object):
         self.Customer = Customer(self)
         self.Invoice = Invoice(self)
         self.Transaction = Transaction(self)
+        self.Subscription = Subscription(self)
 
     def request(self, method, endpoint, params={}):
         url = self.ApiBase + endpoint

@@ -14,6 +14,7 @@ class TestClient(unittest.TestCase):
         self.assertIsInstance(client.Customer, invoiced.Customer)
         self.assertIsInstance(client.Invoice, invoiced.Invoice)
         self.assertIsInstance(client.Transaction, invoiced.Transaction)
+        self.assertIsInstance(client.Subscription, invoiced.Subscription)
 
     @responses.activate
     def test_get_request(self):

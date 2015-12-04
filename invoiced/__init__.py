@@ -4,7 +4,6 @@ from invoiced.objects import (  # noqa
     Customer,
     Email,
     Invoice,
-    Plan,
     Subscription,
     Transaction)
 from invoiced.operations import List  # noqa

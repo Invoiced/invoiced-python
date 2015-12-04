@@ -63,7 +63,7 @@ class TestObject(unittest.TestCase):
         with self.assertRaises(ValueError):
             customer.test = ''
 
-    @unittest.skipIf(sys.version_info < (3, 4), 'inconsistent results between versions')
+    @unittest.skipIf(sys.version_info < (3, 4), 'inconsistent results between versions')  # noqa
     def test_str(self):
         customer = invoiced.Customer(self.client, 123, {'name': 'Pied Piper'})
 
