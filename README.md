@@ -41,7 +41,7 @@ transaction = client.Transaction.create(
     method= "check")
 ```
 
-If you want to use the sandbox API instead then you must set the second argument on the client to `True like this:
+If you want to use the sandbox API instead then you must set the second argument on the client to `True` like this:
 
 ```python
 import 'invoiced'
