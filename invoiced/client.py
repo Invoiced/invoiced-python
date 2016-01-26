@@ -12,16 +12,19 @@ from requests.auth import HTTPBasicAuth
 class Client(object):
 
     ApiBase = 'https://api.invoiced.com'
+    ApiBaseSandbox = 'https://api.sandbox.invoiced.com'
 
-    def __init__(self, api_key):
+    def __init__(self, api_key, sandbox=False):
         self.api_key = api_key
+        self.sandbox = sandbox
+        self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
         self.Customer = Customer(self)
         self.Invoice = Invoice(self)
         self.Transaction = Transaction(self)
         self.Subscription = Subscription(self)
 
     def request(self, method, endpoint, params={}):
-        url = self.ApiBase + endpoint
+        url = self.api_url + endpoint
 
         headers = {
             'content-type': "application/json",
