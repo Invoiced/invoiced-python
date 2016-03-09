@@ -8,6 +8,10 @@ class TestTransaction(unittest.TestCase):
     def setUp(self):
         self.client = invoiced.Client('api_key')
 
+    def test_endpoint(self):
+        transaction = invoiced.Transaction(self.client, 123)
+        self.assertEquals('/transactions/123', transaction.endpoint())
+
     @responses.activate
     def test_create(self):
         responses.add('POST', 'https://api.invoiced.com/transactions',

@@ -8,6 +8,14 @@ class TestObject(unittest.TestCase):
     def setUp(self):
         self.client = invoiced.Client('api_key')
 
+    def test_endpoint(self):
+        customer = invoiced.Customer(self.client, 123)
+        self.assertEqual('/customers/123', customer.endpoint())
+
+        customer.set_endpoint_base('/blah')
+        self.assertEqual('/blah', customer.endpoint_base())
+        self.assertEqual('/blah/customers/123', customer.endpoint())
+
     def test_accessors(self):
         customer = invoiced.Customer(self.client, 123, {'name': 'Pied Piper'})
 

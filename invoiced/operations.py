@@ -13,7 +13,8 @@ class InvoicedObject(dict):
 
         # generate endpoint based on class name
         class_name = self.__class__.__name__
-        self._endpoint = '/' + pluralize(underscore(class_name.lower()))
+        self._endpoint_base = ''
+        self._endpoint = '/' + pluralize(underscore(class_name)).lower()
 
         if id:
             self._endpoint = self._endpoint + '/' + str(id)
@@ -21,12 +22,23 @@ class InvoicedObject(dict):
             values.update({'id': id})
             super(InvoicedObject, self).update(values)
 
+    def set_endpoint_base(self, base):
+        self._endpoint_base = base
+
+        return self
+
+    def endpoint_base(self):
+        return self._endpoint_base
+
+    def endpoint(self):
+        return self._endpoint_base + self._endpoint
+
     def retrieve(self, id, opts={}):
         if not id:
             raise ValueError("Missing ID.")
 
         response = self._client.request('GET',
-                                        self._endpoint+"/"+str(id),
+                                        self.endpoint()+"/"+str(id),
                                         opts)
 
         return util.convert_to_object(self, response['body'])
@@ -98,7 +110,7 @@ class InvoicedObject(dict):
 class CreateableObject(InvoicedObject):
 
     def create(self, **params):
-        response = self._client.request('POST', self._endpoint, params)
+        response = self._client.request('POST', self.endpoint(), params)
 
         return util.convert_to_object(self, response['body'])
 
@@ -106,7 +118,7 @@ class CreateableObject(InvoicedObject):
 class DeleteableObject(InvoicedObject):
 
     def delete(self):
-        response = self._client.request('DELETE', self._endpoint)
+        response = self._client.request('DELETE', self.endpoint())
 
         if response['code'] == 204:
             self.refresh_from({'id': self.id})
@@ -117,7 +129,7 @@ class DeleteableObject(InvoicedObject):
 class ListableObject(InvoicedObject):
 
     def list(self, **opts):
-        response = self._client.request('GET', self._endpoint, opts)
+        response = self._client.request('GET', self.endpoint(), opts)
 
         # build objects
         objects = util.build_objects(self, response['body'])
@@ -140,7 +152,7 @@ class UpdateableObject(InvoicedObject):
 
         # perform the update if there are any changes
         if len(update) > 0:
-            response = self._client.request('PATCH', self._endpoint, update)
+            response = self._client.request('PATCH', self.endpoint(), update)
 
             # update the local values with the response
             self.refresh_from(response['body'])

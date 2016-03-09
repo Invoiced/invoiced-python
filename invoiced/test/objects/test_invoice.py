@@ -8,6 +8,10 @@ class TestInvoice(unittest.TestCase):
     def setUp(self):
         self.client = invoiced.Client('api_key')
 
+    def test_endpoint(self):
+        invoice = invoiced.Invoice(self.client, 123)
+        self.assertEquals('/invoices/123', invoice.endpoint())
+
     @responses.activate
     def test_create(self):
         responses.add('POST', 'https://api.invoiced.com/invoices',

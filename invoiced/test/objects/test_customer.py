@@ -8,6 +8,10 @@ class TestCustomer(unittest.TestCase):
     def setUp(self):
         self.client = invoiced.Client('api_key')
 
+    def test_endpoint(self):
+        customer = invoiced.Customer(self.client, 123)
+        self.assertEquals('/customers/123', customer.endpoint())
+
     @responses.activate
     def test_create(self):
         responses.add('POST', 'https://api.invoiced.com/customers',
@@ -125,3 +129,62 @@ class TestCustomer(unittest.TestCase):
 
         self.assertIsInstance(metadata, invoiced.List)
         self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
+    def test_create_pending_line_item(self):
+        responses.add('POST', 'https://api.invoiced.com/customers/123/line_items',
+                      status=201,
+                      json={"id": 456, "amount": 500})
+
+        customer = invoiced.Customer(self.client, 123)
+        line_item = customer.line_items().create(amount=500)
+
+        self.assertIsInstance(line_item, invoiced.LineItem)
+        self.assertEqual(line_item.id, 456)
+        self.assertEqual(line_item.amount, 500)
+
+    @responses.activate
+    def test_retrieve_pending_line_item(self):
+        responses.add('GET', 'https://api.invoiced.com/customers/123/line_items/456',
+                      status=200,
+                      json={"id": "456", "amount": 500})
+
+        customer = invoiced.Customer(self.client, 123)
+        line_item = customer.line_items().retrieve(456)
+
+        self.assertIsInstance(line_item, invoiced.LineItem)
+        self.assertEqual(line_item.id, '456')
+        self.assertEqual(line_item.amount, 500)
+
+    @responses.activate
+    def test_list_pending_line_items(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/line_items',
+                      status=200,
+                      json=[{"id": 456, "amount": 500}],
+                      adding_headers={
+                        'x-total-count': '10',
+                        'link': '<https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="last"'})  # noqa
+
+        customer = invoiced.Customer(self.client, 123)
+        line_items, metadata = customer.line_items().list()
+
+        self.assertIsInstance(line_items, list)
+        self.assertEqual(len(line_items), 1)
+        self.assertEqual(line_items[0].id, 456)
+
+        self.assertIsInstance(metadata, invoiced.List)
+        self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
+    def test_invoice(self):
+        responses.add('POST', 'https://api.invoiced.com/customers/123/invoices',
+                      status=201,
+                      json={"id": 456, "total": 500})
+
+        customer = invoiced.Customer(self.client, 123)
+        invoice = customer.invoice()
+
+        self.assertIsInstance(invoice, invoiced.Invoice)
+        self.assertEqual(invoice.id, 456)
+        self.assertEqual(invoice.total, 500)

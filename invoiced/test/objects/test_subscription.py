@@ -8,6 +8,10 @@ class TestSubscription(unittest.TestCase):
     def setUp(self):
         self.client = invoiced.Client('api_key')
 
+    def test_endpoint(self):
+        subscription = invoiced.Subscription(self.client, 123)
+        self.assertEquals('/subscriptions/123', subscription.endpoint())
+
     @responses.activate
     def test_create(self):
         responses.add('POST', 'https://api.invoiced.com/subscriptions',

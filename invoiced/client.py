@@ -97,4 +97,4 @@ class Client(object):
         return errors.ApiError(error["message"], response.status_code, error)
 
     def general_api_error(self, code, body):
-        return errors.ApiError("API Error #{code} - #{body}", code)
+        return errors.ApiError("API Error " + str(code) + " - " + str(body), code)

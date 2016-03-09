@@ -5,9 +5,12 @@ def build_objects(_class, objects):
     return list(map(lambda obj: convert_to_object(_class, obj), objects))
 
 
-def convert_to_object(_class, obj):
+def convert_to_object(_class, values):
     c = _class.__class__
-    return c(_class._client, obj['id'], obj)
+    obj = c(_class._client, values['id'], values)
+    obj.set_endpoint_base(_class.endpoint_base())
+
+    return obj
 
 
 def uri_encode(params):
