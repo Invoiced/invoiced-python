@@ -111,26 +111,6 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(balance, expected)
 
     @responses.activate
-    def test_subscriptions(self):
-        responses.add('GET',
-                      'https://api.invoiced.com/customers/123/subscriptions',
-                      status=200,
-                      json=[{"id": 123, "name": "Pied Piper"}],
-                      adding_headers={
-                        'x-total-count': '10',
-                        'link': '<https://api.invoiced.com/customers/123/subscriptions?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers/123/subscriptions?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers/123/subscriptions?per_page=25&page=1>; rel="last"'})  # noqa
-
-        customer = invoiced.Customer(self.client, 123)
-        subscriptions, metadata = customer.subscriptions()
-
-        self.assertIsInstance(subscriptions, list)
-        self.assertEqual(len(subscriptions), 1)
-        self.assertEqual(subscriptions[0].id, 123)
-
-        self.assertIsInstance(metadata, invoiced.List)
-        self.assertEqual(metadata.total_count, 10)
-
-    @responses.activate
     def test_create_pending_line_item(self):
         responses.add('POST', 'https://api.invoiced.com/customers/123/line_items',
                       status=201,

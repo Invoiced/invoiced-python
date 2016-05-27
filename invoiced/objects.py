@@ -23,21 +23,6 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
         return response['body']
 
-    def subscriptions(self, **opts):
-        response = self._client.request('GET',
-                                        self.endpoint()+"/subscriptions",
-                                        opts)
-
-        # build objects
-        subscription = Subscription(self._client)
-        subscriptions = util.build_objects(subscription, response['body'])
-
-        # store the metadata from the list operation
-        metadata = List(response['headers']['link'],
-                        response['headers']['x-total-count'])
-
-        return subscriptions, metadata
-
     def line_items(self):
         line = LineItem(self._client)
         line.set_endpoint_base(self.endpoint())
