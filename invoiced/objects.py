@@ -3,8 +3,7 @@ from invoiced.operations import (
     CreateableObject,
     DeleteableObject,
     ListableObject,
-    UpdateableObject,
-    List)
+    UpdateableObject)
 from invoiced import util
 
 
@@ -12,14 +11,16 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
 
     def send_statement(self, **opts):
-        response = self._client.request('POST', self.endpoint()+"/emails", opts)
+        endpoint = self.endpoint()+"/emails"
+        response = self._client.request('POST', endpoint, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
     def balance(self):
-        response = self._client.request('GET', self.endpoint()+"/balance")
+        endpoint = self.endpoint()+"/balance"
+        response = self._client.request('GET', endpoint)
 
         return response['body']
 
@@ -30,7 +31,8 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         return line
 
     def invoice(self, **opts):
-        response = self._client.request('POST', self.endpoint()+"/invoices", opts)
+        endpoint = self.endpoint()+"/invoices"
+        response = self._client.request('POST', endpoint, opts)
 
         # build invoice object
         invoice = Invoice(self._client)
@@ -38,21 +40,24 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+               UpdateableObject):
     pass
+
 
 class Invoice(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
 
     def send(self, **opts):
-        response = self._client.request('POST', self.endpoint()+"/emails", opts)
+        endpoint = self.endpoint()+"/emails"
+        response = self._client.request('POST', endpoint, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
     def pay(self):
-        response = self._client.request('POST', self.endpoint()+"/pay")
+        endpoint = self.endpoint()+"/pay"
+        response = self._client.request('POST', endpoint)
 
         # update the local values with the response
         self.refresh_from(response['body'])
@@ -64,16 +69,16 @@ class Transaction(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
 
     def send(self, **opts):
-        response = self._client.request('POST', self.endpoint()+"/emails", opts)
+        endpoint = self.endpoint()+"/emails"
+        response = self._client.request('POST', endpoint, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
     def refund(self, **opts):
-        response = self._client.request('POST',
-                                        self.endpoint()+"/refunds",
-                                        opts)
+        endpoint = self.endpoint()+"/refunds"
+        response = self._client.request('POST', endpoint, opts)
 
         return util.convert_to_object(self, response['body'])
 

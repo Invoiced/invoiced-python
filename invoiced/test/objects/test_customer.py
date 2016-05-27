@@ -112,7 +112,8 @@ class TestCustomer(unittest.TestCase):
 
     @responses.activate
     def test_create_pending_line_item(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/123/line_items',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/line_items',
                       status=201,
                       json={"id": 456, "amount": 500})
 
@@ -125,7 +126,8 @@ class TestCustomer(unittest.TestCase):
 
     @responses.activate
     def test_retrieve_pending_line_item(self):
-        responses.add('GET', 'https://api.invoiced.com/customers/123/line_items/456',
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/line_items/456',
                       status=200,
                       json={"id": "456", "amount": 500})
 
@@ -158,7 +160,8 @@ class TestCustomer(unittest.TestCase):
 
     @responses.activate
     def test_invoice(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/123/invoices',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/invoices',
                       status=201,
                       json={"id": 456, "total": 500})
 
