@@ -10,7 +10,7 @@ class TestSubscription(unittest.TestCase):
 
     def test_endpoint(self):
         subscription = invoiced.Subscription(self.client, 123)
-        self.assertEquals('/subscriptions/123', subscription.endpoint())
+        self.assertEqual('/subscriptions/123', subscription.endpoint())
 
     @responses.activate
     def test_create(self):

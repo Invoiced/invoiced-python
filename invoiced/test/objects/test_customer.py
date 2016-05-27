@@ -10,7 +10,7 @@ class TestCustomer(unittest.TestCase):
 
     def test_endpoint(self):
         customer = invoiced.Customer(self.client, 123)
-        self.assertEquals('/customers/123', customer.endpoint())
+        self.assertEqual('/customers/123', customer.endpoint())
 
     @responses.activate
     def test_create(self):
@@ -111,39 +111,87 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(balance, expected)
 
     @responses.activate
+    def test_create_contact(self):
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/contacts',
+                      status=201,
+                      json={"id": 456, "name": "Nancy"})
+
+        customer = invoiced.Customer(self.client, 123)
+        contact = customer.contacts().create(name="Nancy")
+
+        self.assertIsInstance(contact, invoiced.Contact)
+        self.assertEqual(contact.id, 456)
+        self.assertEqual(contact.name, "Nancy")
+
+    @responses.activate
+    def test_retrieve_contact(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/contacts/456',
+                      status=200,
+                      json={"id": "456", "name": "Nancy"})
+
+        customer = invoiced.Customer(self.client, 123)
+        contact = customer.contacts().retrieve(456)
+
+        self.assertIsInstance(contact, invoiced.Contact)
+        self.assertEqual(contact.id, '456')
+        self.assertEqual(contact.name, "Nancy")
+
+    @responses.activate
+    def test_list_contacts(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/contacts',
+                      status=200,
+                      json=[{"id": 456, "name": "Nancy"}],
+                      adding_headers={
+                        'x-total-count': '10',
+                        'link': '<https://api.invoiced.com/customers/123/contacts?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers/123/contacts?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers/123/contacts?per_page=25&page=1>; rel="last"'})  # noqa
+
+        customer = invoiced.Customer(self.client, 123)
+        contacts, metadata = customer.contacts().list()
+
+        self.assertIsInstance(contacts, list)
+        self.assertEqual(len(contacts), 1)
+        self.assertEqual(contacts[0].id, 456)
+
+        self.assertIsInstance(metadata, invoiced.List)
+        self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
     def test_create_pending_line_item(self):
         responses.add('POST',
                       'https://api.invoiced.com/customers/123/line_items',
                       status=201,
-                      json={"id": 456, "amount": 500})
+                      json={"id": 456, "unit_cost": 500})
 
         customer = invoiced.Customer(self.client, 123)
-        line_item = customer.line_items().create(amount=500)
+        line_item = customer.line_items().create(unit_cost=500)
 
         self.assertIsInstance(line_item, invoiced.LineItem)
         self.assertEqual(line_item.id, 456)
-        self.assertEqual(line_item.amount, 500)
+        self.assertEqual(line_item.unit_cost, 500)
 
     @responses.activate
     def test_retrieve_pending_line_item(self):
         responses.add('GET',
                       'https://api.invoiced.com/customers/123/line_items/456',
                       status=200,
-                      json={"id": "456", "amount": 500})
+                      json={"id": "456", "unit_cost": 500})
 
         customer = invoiced.Customer(self.client, 123)
         line_item = customer.line_items().retrieve(456)
 
         self.assertIsInstance(line_item, invoiced.LineItem)
         self.assertEqual(line_item.id, '456')
-        self.assertEqual(line_item.amount, 500)
+        self.assertEqual(line_item.unit_cost, 500)
 
     @responses.activate
     def test_list_pending_line_items(self):
         responses.add('GET',
                       'https://api.invoiced.com/customers/123/line_items',
                       status=200,
-                      json=[{"id": 456, "amount": 500}],
+                      json=[{"id": 456, "unit_cost": 500}],
                       adding_headers={
                         'x-total-count': '10',
                         'link': '<https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers/123/line_items?per_page=25&page=1>; rel="last"'})  # noqa

@@ -10,7 +10,7 @@ class TestLineItem(unittest.TestCase):
 
     def test_endpoint(self):
         line_item = invoiced.LineItem(self.client, 123)
-        self.assertEquals('/line_items/123', line_item.endpoint())
+        self.assertEqual('/line_items/123', line_item.endpoint())
 
     @responses.activate
     def test_create(self):

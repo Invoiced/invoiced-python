@@ -24,6 +24,12 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
         return response['body']
 
+    def contacts(self):
+        contact = Contact(self._client)
+        contact.set_endpoint_base(self.endpoint())
+
+        return contact
+
     def line_items(self):
         line = LineItem(self._client)
         line.set_endpoint_base(self.endpoint())
@@ -37,6 +43,11 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         # build invoice object
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
+
+
+class Contact(CreateableObject, DeleteableObject, ListableObject,
+               UpdateableObject):
+    pass
 
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,

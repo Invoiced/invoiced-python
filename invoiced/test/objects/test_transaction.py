@@ -10,7 +10,7 @@ class TestTransaction(unittest.TestCase):
 
     def test_endpoint(self):
         transaction = invoiced.Transaction(self.client, 123)
-        self.assertEquals('/transactions/123', transaction.endpoint())
+        self.assertEqual('/transactions/123', transaction.endpoint())
 
     @responses.activate
     def test_create(self):
