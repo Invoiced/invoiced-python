@@ -33,17 +33,15 @@ class TestObject(unittest.TestCase):
 
         customer.refresh_from({'id': 123, 'notes': '....'})
 
-        # name attribute should no longer be available
         self.assertEqual('....', customer.notes)
+        # name attribute should no longer be available
         with self.assertRaises(AttributeError):
             customer.name
 
+        del customer._client
+
         with self.assertRaises(KeyError):
             del customer.name
-
-        del customer.notes
-        with self.assertRaises(AttributeError):
-            customer.notes
 
         customer['notes'] = '....'
         del customer['notes']

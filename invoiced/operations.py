@@ -48,7 +48,7 @@ class InvoicedObject(dict):
         self.clear()
 
         for k, v in values.items():
-            super(InvoicedObject, self).__setattr__(k, v)
+            super(InvoicedObject, self).__setitem__(k, v)
 
     def update(self, update_dict):
         for k in update_dict:
