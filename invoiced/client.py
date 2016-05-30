@@ -1,5 +1,6 @@
 from invoiced.objects import (
     Customer,
+    File,
     Invoice,
     Transaction,
     Subscription)
@@ -18,7 +19,10 @@ class Client(object):
         self.api_key = api_key
         self.sandbox = sandbox
         self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
+
+        # Object endpoints
         self.Customer = Customer(self)
+        self.File = File(self)
         self.Invoice = Invoice(self)
         self.Transaction = Transaction(self)
         self.Subscription = Subscription(self)

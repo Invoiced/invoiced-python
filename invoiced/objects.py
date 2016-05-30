@@ -46,12 +46,15 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
 
 class Contact(CreateableObject, DeleteableObject, ListableObject,
-               UpdateableObject):
+              UpdateableObject):
     pass
 
 
-class LineItem(CreateableObject, DeleteableObject, ListableObject,
-               UpdateableObject):
+class Email(InvoicedObject):
+    pass
+
+
+class File(CreateableObject, DeleteableObject):
     pass
 
 
@@ -74,6 +77,11 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
         self.refresh_from(response['body'])
 
         return response['code'] == 200
+
+
+class LineItem(CreateableObject, DeleteableObject, ListableObject,
+               UpdateableObject):
+    pass
 
 
 class Transaction(CreateableObject, DeleteableObject, ListableObject,
@@ -99,7 +107,3 @@ class Subscription(CreateableObject, DeleteableObject, ListableObject,
 
     def cancel(self):
         return self.delete()
-
-
-class Email(InvoicedObject):
-    pass
