@@ -3,8 +3,13 @@ from invoiced.operations import (
     CreateableObject,
     DeleteableObject,
     ListableObject,
-    UpdateableObject)
+    UpdateableObject,
+    List)
 from invoiced import util
+
+
+class Attachment(InvoicedObject):
+    pass
 
 
 class Customer(CreateableObject, DeleteableObject, ListableObject,
@@ -77,6 +82,27 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
         self.refresh_from(response['body'])
 
         return response['code'] == 200
+
+    def attachments(self, **opts):
+        response = self._client.request('GET',
+                                        self.endpoint()+"/attachments",
+                                        opts)
+
+        # ensure each attachment has an ID
+        body = response['body']
+        for attachment in body:
+            if 'id' not in attachment:
+                attachment['id'] = attachment['file']['id']
+
+        # build attachment objects
+        attachment = Attachment(self._client)
+        attachments = util.build_objects(attachment, body)
+
+        # store the metadata from the list operation
+        metadata = List(response['headers']['link'],
+                        response['headers']['x-total-count'])
+
+        return attachments, metadata
 
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,
