@@ -73,7 +73,9 @@ class TestSubscription(unittest.TestCase):
     @responses.activate
     def test_cancel(self):
         responses.add('DELETE', 'https://api.invoiced.com/subscriptions/123',
-                      status=204)
+                      status=200,
+                      json={"id": 123, "plan": "pro", "status": "canceled"})
 
         subscription = invoiced.Subscription(self.client, 123)
         self.assertTrue(subscription.cancel())
+        self.assertEquals(subscription.status, "canceled")

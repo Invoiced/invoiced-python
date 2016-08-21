@@ -122,8 +122,11 @@ class DeleteableObject(InvoicedObject):
 
         if response['code'] == 204:
             self.refresh_from({'id': self.id})
+        elif response['code'] == 200:
+            # update the local values with the response
+            self.refresh_from(response['body'])
 
-        return response['code'] == 204
+        return response['code'] == 204 or response['code'] == 200
 
 
 class ListableObject(InvoicedObject):
