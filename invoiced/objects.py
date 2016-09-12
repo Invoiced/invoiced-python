@@ -59,6 +59,10 @@ class Email(InvoicedObject):
     pass
 
 
+class Event(ListableObject):
+    pass
+
+
 class File(CreateableObject, DeleteableObject):
     pass
 

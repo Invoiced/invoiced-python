@@ -5,6 +5,7 @@ from invoiced.objects import (  # noqa
     Contact,
     Customer,
     Email,
+    Event,
     File,
     Invoice,
     LineItem,

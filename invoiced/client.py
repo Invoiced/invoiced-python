@@ -1,5 +1,6 @@
 from invoiced.objects import (
     Customer,
+    Event,
     File,
     Invoice,
     Transaction,
@@ -22,10 +23,11 @@ class Client(object):
 
         # Object endpoints
         self.Customer = Customer(self)
+        self.Event = Event(self)
         self.File = File(self)
         self.Invoice = Invoice(self)
-        self.Transaction = Transaction(self)
         self.Subscription = Subscription(self)
+        self.Transaction = Transaction(self)
 
     def request(self, method, endpoint, params={}):
         url = self.api_url + endpoint
