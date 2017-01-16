@@ -1,4 +1,5 @@
 from invoiced.objects import (
+    CreditNote,
     Customer,
     Event,
     File,
@@ -22,6 +23,7 @@ class Client(object):
         self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
 
         # Object endpoints
+        self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
         self.Event = Event(self)
         self.File = File(self)

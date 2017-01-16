@@ -12,6 +12,39 @@ class Attachment(InvoicedObject):
     pass
 
 
+class CreditNote(CreateableObject, DeleteableObject, ListableObject,
+                 UpdateableObject):
+
+    def send(self, **opts):
+        endpoint = self.endpoint()+"/emails"
+        response = self._client.request('POST', endpoint, opts)
+
+        # build email objects
+        email = Email(self._client)
+        return util.build_objects(email, response['body'])
+
+    def attachments(self, **opts):
+        response = self._client.request('GET',
+                                        self.endpoint()+"/attachments",
+                                        opts)
+
+        # ensure each attachment has an ID
+        body = response['body']
+        for attachment in body:
+            if 'id' not in attachment:
+                attachment['id'] = attachment['file']['id']
+
+        # build attachment objects
+        attachment = Attachment(self._client)
+        attachments = util.build_objects(attachment, body)
+
+        # store the metadata from the list operation
+        metadata = List(response['headers']['link'],
+                        response['headers']['x-total-count'])
+
+        return attachments, metadata
+
+
 class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
 

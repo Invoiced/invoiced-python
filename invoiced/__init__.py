@@ -3,6 +3,7 @@ from invoiced.version import VERSION  # noqa
 from invoiced.objects import (  # noqa
     Attachment,
     Contact,
+    CreditNote,
     Customer,
     Email,
     Event,
