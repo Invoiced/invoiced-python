@@ -92,6 +92,47 @@ class Email(InvoicedObject):
     pass
 
 
+class Estimate(CreateableObject, DeleteableObject, ListableObject,
+               UpdateableObject):
+
+    def send(self, **opts):
+        endpoint = self.endpoint()+"/emails"
+        response = self._client.request('POST', endpoint, opts)
+
+        # build email objects
+        email = Email(self._client)
+        return util.build_objects(email, response['body'])
+
+    def attachments(self, **opts):
+        response = self._client.request('GET',
+                                        self.endpoint()+"/attachments",
+                                        opts)
+
+        # ensure each attachment has an ID
+        body = response['body']
+        for attachment in body:
+            if 'id' not in attachment:
+                attachment['id'] = attachment['file']['id']
+
+        # build attachment objects
+        attachment = Attachment(self._client)
+        attachments = util.build_objects(attachment, body)
+
+        # store the metadata from the list operation
+        metadata = List(response['headers']['link'],
+                        response['headers']['x-total-count'])
+
+        return attachments, metadata
+
+    def invoice(self, **opts):
+        endpoint = self.endpoint()+"/invoice"
+        response = self._client.request('POST', endpoint, opts)
+
+        # build invoice object
+        invoice = Invoice(self._client)
+        return util.convert_to_object(invoice, response['body'])
+
+
 class Event(ListableObject):
     pass
 

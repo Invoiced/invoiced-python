@@ -6,6 +6,7 @@ from invoiced.objects import (  # noqa
     CreditNote,
     Customer,
     Email,
+    Estimate,
     Event,
     File,
     Invoice,

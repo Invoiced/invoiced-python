@@ -1,6 +1,7 @@
 from invoiced.objects import (
     CreditNote,
     Customer,
+    Estimate,
     Event,
     File,
     Invoice,
@@ -25,6 +26,7 @@ class Client(object):
         # Object endpoints
         self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
+        self.Estimate = Estimate(self)
         self.Event = Event(self)
         self.File = File(self)
         self.Invoice = Invoice(self)
