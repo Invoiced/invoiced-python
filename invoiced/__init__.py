@@ -11,6 +11,7 @@ from invoiced.objects import (  # noqa
     File,
     Invoice,
     LineItem,
+    PaymentPlan,
     Subscription,
     Transaction)
 from invoiced.operations import List  # noqa

@@ -182,10 +182,39 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
 
         return attachments, metadata
 
+    def payment_plan(self):
+        paymentPlan = PaymentPlan(self._client)
+        paymentPlan.set_endpoint_base(self.endpoint())
+
+        return paymentPlan
+
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
     pass
+
+
+class PaymentPlan(DeleteableObject):
+
+    def __init__(self, client, id=None, values={}):
+        super().__init__(client, id, values)
+
+        self._endpoint = '/payment_plan'
+
+    def create(self, **params):
+        response = self._client.request('PUT', self.endpoint(), params)
+
+        return util.convert_to_object(self, response['body'])
+
+    def retrieve(self, opts={}):
+        response = self._client.request('GET',
+                                        self.endpoint(),
+                                        opts)
+
+        return util.convert_to_object(self, response['body'])
+
+    def cancel(self):
+        return self.delete()
 
 
 class Transaction(CreateableObject, DeleteableObject, ListableObject,

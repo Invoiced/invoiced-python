@@ -122,3 +122,32 @@ class TestInvoice(unittest.TestCase):
 
         self.assertIsInstance(metadata, invoiced.List)
         self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
+    def test_create_payment_plan(self):
+        responses.add('PUT',
+                      'https://api.invoiced.com/invoices/123/payment_plan',
+                      status=201,
+                      json={"id": 456, "status": "active"})
+
+        invoice = invoiced.Invoice(self.client, 123)
+        payment_plan = invoice.payment_plan().create(installments=[{
+            'date': 1234, 'amount': 100}])
+
+        self.assertIsInstance(payment_plan, invoiced.PaymentPlan)
+        self.assertEqual(payment_plan.id, 456)
+        self.assertEqual(payment_plan.status, "active")
+
+    @responses.activate
+    def test_retrieve_payment_plan(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/invoices/123/payment_plan',
+                      status=200,
+                      json={"id": "456", "status": "active"})
+
+        invoice = invoiced.Invoice(self.client, 123)
+        payment_plan = invoice.payment_plan().retrieve()
+
+        self.assertIsInstance(payment_plan, invoiced.PaymentPlan)
+        self.assertEqual(payment_plan.id, '456')
+        self.assertEqual(payment_plan.status, "active")
