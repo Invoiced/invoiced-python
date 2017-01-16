@@ -36,6 +36,9 @@ setup(
         'requests >= 2.0.0',
         'inflection == 0.3.1'
     ],
+    extras_require={
+        'requests': ['security>=2.0.0']
+    },
     test_suite='invoiced.test.all',
     tests_require=['responses == 0.5.0'],
     classifiers=[
