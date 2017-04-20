@@ -45,6 +45,11 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
         return attachments, metadata
 
 
+class Contact(CreateableObject, DeleteableObject, ListableObject,
+              UpdateableObject):
+    pass
+
+
 class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
 
@@ -81,11 +86,6 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         # build invoice object
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
-
-
-class Contact(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
-    pass
 
 
 class Email(InvoicedObject):
@@ -217,6 +217,13 @@ class PaymentPlan(DeleteableObject):
         return self.delete()
 
 
+class Subscription(CreateableObject, DeleteableObject, ListableObject,
+                   UpdateableObject):
+
+    def cancel(self):
+        return self.delete()
+
+
 class Transaction(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
 
@@ -233,10 +240,3 @@ class Transaction(CreateableObject, DeleteableObject, ListableObject,
         response = self._client.request('POST', endpoint, opts)
 
         return util.convert_to_object(self, response['body'])
-
-
-class Subscription(CreateableObject, DeleteableObject, ListableObject,
-                   UpdateableObject):
-
-    def cancel(self):
-        return self.delete()
