@@ -12,6 +12,16 @@ class Attachment(InvoicedObject):
     pass
 
 
+class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
+                  UpdateableObject):
+    pass
+
+
+class Contact(CreateableObject, DeleteableObject, ListableObject,
+              UpdateableObject):
+    pass
+
+
 class CreditNote(CreateableObject, DeleteableObject, ListableObject,
                  UpdateableObject):
 
@@ -43,11 +53,6 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
                         response['headers']['x-total-count'])
 
         return attachments, metadata
-
-
-class Contact(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
-    pass
 
 
 class Customer(CreateableObject, DeleteableObject, ListableObject,
@@ -215,6 +220,11 @@ class PaymentPlan(DeleteableObject):
 
     def cancel(self):
         return self.delete()
+
+
+class Plan(CreateableObject, DeleteableObject, ListableObject,
+           UpdateableObject):
+    pass
 
 
 class Subscription(CreateableObject, DeleteableObject, ListableObject,

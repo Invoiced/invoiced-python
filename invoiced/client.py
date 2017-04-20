@@ -1,10 +1,12 @@
 from invoiced.objects import (
+    CatalogItem,
     CreditNote,
     Customer,
     Estimate,
     Event,
     File,
     Invoice,
+    Plan,
     Transaction,
     Subscription)
 from invoiced import errors, util, version
@@ -24,12 +26,14 @@ class Client(object):
         self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
 
         # Object endpoints
+        self.CatalogItem = CatalogItem(self)
         self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
         self.Estimate = Estimate(self)
         self.Event = Event(self)
         self.File = File(self)
         self.Invoice = Invoice(self)
+        self.Plan = Plan(self)
         self.Subscription = Subscription(self)
         self.Transaction = Transaction(self)
 

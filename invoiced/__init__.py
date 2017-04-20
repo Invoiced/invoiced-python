@@ -2,6 +2,7 @@ from invoiced.client import Client  # noqa
 from invoiced.version import VERSION  # noqa
 from invoiced.objects import (  # noqa
     Attachment,
+    CatalogItem,
     Contact,
     CreditNote,
     Customer,
@@ -12,6 +13,7 @@ from invoiced.objects import (  # noqa
     Invoice,
     LineItem,
     PaymentPlan,
+    Plan,
     Subscription,
     Transaction)
 from invoiced.operations import List  # noqa
