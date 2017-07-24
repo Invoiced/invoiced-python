@@ -90,6 +90,8 @@ class Client(object):
             raise self.invalid_request_error(error, response)
         elif response.status_code == 401:
             raise self.authentication_error(error, response)
+        elif response.status_code == 429:
+            raise self.rate_limit_error(error, response)
         else:
             raise self.api_error(error, response)
 
@@ -106,6 +108,11 @@ class Client(object):
         return errors.InvalidRequestError(error["message"],
                                           response.status_code,
                                           error)
+
+    def rate_limit_error(self, error, response):
+        return errors.RateLimitError(error["message"],
+                                     response.status_code,
+                                     error)
 
     def api_error(self, error, response):
         return errors.ApiError(error["message"], response.status_code, error)

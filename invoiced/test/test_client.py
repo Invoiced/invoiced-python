@@ -114,6 +114,18 @@ class TestClient(unittest.TestCase):
             client.request("POST", "/invoices")
 
     @responses.activate
+    def test_rate_limit_error(self):
+        responses.add(responses.POST,
+                      'https://api.invoiced.com/invoices',
+                      json={'message': 'error'},
+                      status=429)
+
+        client = invoiced.Client('test')
+
+        with self.assertRaises(invoiced.errors.RateLimitError):
+            client.request("POST", "/invoices")
+
+    @responses.activate
     def test_authentication_error(self):
         responses.add(responses.POST,
                       'https://api.invoiced.com/invoices',

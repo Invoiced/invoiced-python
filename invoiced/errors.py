@@ -22,5 +22,9 @@ class InvalidRequestError(ErrorBase):
     pass
 
 
+class RateLimitError(ErrorBase):
+    pass
+
+
 class AuthenticationError(ErrorBase):
     pass
