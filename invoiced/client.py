@@ -62,9 +62,9 @@ class Client(object):
                                     auth=HTTPBasicAuth(self.api_key, ''))
 
             if (resp.status_code >= 400):
-                self.rescue_api_error(resp)
+                self.handle_api_error(resp)
         except requests.exceptions.RequestException as e:
-            self.rescue_requests_error(e)
+            self.handle_network_error(e)
 
         return self.parse(resp)
 
@@ -80,7 +80,7 @@ class Client(object):
             'body': parsed_response
         }
 
-    def rescue_api_error(self, response):
+    def handle_api_error(self, response):
         try:
             error = json.loads(response.text)
         except:
@@ -95,9 +95,12 @@ class Client(object):
         else:
             raise self.api_error(error, response)
 
-    def rescue_requests_error(self, error):
+    def handle_network_error(self, error):
         raise errors.ApiConnectionError("There was an error connecting to "
-                                        "Invoiced.")
+                                        "Invoiced. Please check your internet "
+                                        "connection or status.invoiced.com "
+                                        "for service outages. The reason was: "
+                                        + str(error))
 
     def authentication_error(self, error, response):
         return errors.AuthenticationError(error["message"],
