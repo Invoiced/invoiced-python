@@ -25,18 +25,19 @@ class Contact(CreateableObject, DeleteableObject, ListableObject,
 class CreditNote(CreateableObject, DeleteableObject, ListableObject,
                  UpdateableObject):
 
-    def send(self, **opts):
+    def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
-    def attachments(self, **opts):
+    def attachments(self, **params):
         response = self._client.request('GET',
                                         self.endpoint()+"/attachments",
-                                        opts)
+                                        params)
 
         # ensure each attachment has an ID
         body = response['body']
@@ -58,9 +59,10 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
 class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
 
-    def send_statement(self, **opts):
+    def send_statement(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build email objects
         email = Email(self._client)
@@ -84,9 +86,10 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
         return line
 
-    def invoice(self, **opts):
+    def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoices"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build invoice object
         invoice = Invoice(self._client)
@@ -100,18 +103,19 @@ class Email(InvoicedObject):
 class Estimate(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
 
-    def send(self, **opts):
+    def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
-    def attachments(self, **opts):
+    def attachments(self, **params):
         response = self._client.request('GET',
                                         self.endpoint()+"/attachments",
-                                        opts)
+                                        params)
 
         # ensure each attachment has an ID
         body = response['body']
@@ -129,9 +133,10 @@ class Estimate(CreateableObject, DeleteableObject, ListableObject,
 
         return attachments, metadata
 
-    def invoice(self, **opts):
+    def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoice"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build invoice object
         invoice = Invoice(self._client)
@@ -149,27 +154,29 @@ class File(CreateableObject, DeleteableObject):
 class Invoice(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
 
-    def send(self, **opts):
+    def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
-    def pay(self):
+    def pay(self, idempotency_key=None, **opts):
         endpoint = self.endpoint()+"/pay"
-        response = self._client.request('POST', endpoint)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, {}, opts)
 
         # update the local values with the response
         self.refresh_from(response['body'])
 
         return response['code'] == 200
 
-    def attachments(self, **opts):
+    def attachments(self, **params):
         response = self._client.request('GET',
                                         self.endpoint()+"/attachments",
-                                        opts)
+                                        params)
 
         # ensure each attachment has an ID
         body = response['body']
@@ -206,15 +213,16 @@ class PaymentPlan(DeleteableObject):
 
         self._endpoint = '/payment_plan'
 
-    def create(self, **params):
-        response = self._client.request('PUT', self.endpoint(), params)
+    def create(self, idempotency_key=None, **params):
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('PUT', self.endpoint(), params, opts)
 
         return util.convert_to_object(self, response['body'])
 
-    def retrieve(self, opts={}):
+    def retrieve(self, params={}):
         response = self._client.request('GET',
                                         self.endpoint(),
-                                        opts)
+                                        params)
 
         return util.convert_to_object(self, response['body'])
 
@@ -237,16 +245,18 @@ class Subscription(CreateableObject, DeleteableObject, ListableObject,
 class Transaction(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
 
-    def send(self, **opts):
+    def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
-    def refund(self, **opts):
+    def refund(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/refunds"
-        response = self._client.request('POST', endpoint, opts)
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
 
         return util.convert_to_object(self, response['body'])

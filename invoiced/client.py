@@ -37,13 +37,8 @@ class Client(object):
         self.Subscription = Subscription(self)
         self.Transaction = Transaction(self)
 
-    def request(self, method, endpoint, params={}):
+    def request(self, method, endpoint, params={}, opts={}):
         url = self.api_url + endpoint
-
-        headers = {
-            'content-type': "application/json",
-            'user-agent': "Invoiced Python/"+version.VERSION
-        }
 
         # These methods don't have a request body
         if method in ('GET', 'HEAD', 'DELETE'):
@@ -57,7 +52,7 @@ class Client(object):
 
         try:
             resp = requests.request(method, url,
-                                    headers=headers,
+                                    headers=self.build_headers(opts),
                                     data=payload,
                                     auth=HTTPBasicAuth(self.api_key, ''))
 
@@ -67,6 +62,18 @@ class Client(object):
             self.handle_network_error(e)
 
         return self.parse(resp)
+
+    def build_headers(self, opts):
+        headers = {
+            'content-type': "application/json",
+            'user-agent': "Invoiced Python/"+version.VERSION
+        }
+
+        # idempotency keys
+        if "idempotency_key" in opts and opts["idempotency_key"]:
+            headers["idempotency-key"] = opts["idempotency_key"]
+
+        return headers
 
     def parse(self, response):
         if response.status_code == 204:

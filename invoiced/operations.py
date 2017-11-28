@@ -109,8 +109,9 @@ class InvoicedObject(dict):
 
 class CreateableObject(InvoicedObject):
 
-    def create(self, **params):
-        response = self._client.request('POST', self.endpoint(), params)
+    def create(self, idempotency_key=None, **params):
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', self.endpoint(), params, opts)
 
         return util.convert_to_object(self, response['body'])
 
@@ -146,7 +147,7 @@ class ListableObject(InvoicedObject):
 
 class UpdateableObject(InvoicedObject):
 
-    def save(self, **params):
+    def save(self, idempotency_key=None, **params):
         update = {}
         for k in self._unsaved:
             update[k] = self[k]
@@ -155,7 +156,11 @@ class UpdateableObject(InvoicedObject):
 
         # perform the update if there are any changes
         if len(update) > 0:
-            response = self._client.request('PATCH', self.endpoint(), update)
+            opts = {'idempotency_key': idempotency_key}
+            response = self._client.request('PATCH',
+                                            self.endpoint(),
+                                            update,
+                                            opts)
 
             # update the local values with the response
             self.refresh_from(response['body'])

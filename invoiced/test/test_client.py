@@ -91,6 +91,33 @@ class TestClient(unittest.TestCase):
         self.assertEqual(response, expectedResponse)
 
     @responses.activate
+    def test_post_idempotent_request(self):
+        responses.add(responses.POST,
+                      'https://api.invoiced.com/invoices',
+                      status=204,
+                      adding_headers={'Header': 'test'})
+
+        client = invoiced.Client('test')
+
+        params = {
+            "test": "property"
+        }
+        opts = {
+            "idempotency_key": "a random value"
+        }
+        response = client.request("POST", "/invoices", params, opts)
+
+        expectedResponse = {
+            'code': 204,
+            'headers': {
+                'Header': 'test',
+                'Content-Type': 'text/plain'
+            },
+            'body': None
+        }
+        self.assertEqual(response, expectedResponse)
+
+    @responses.activate
     def test_request_exception(self):
         responses.add(responses.GET,
                       'https://api.invoiced.com/invoices',
