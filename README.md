@@ -8,7 +8,7 @@ This repository contains the Python client library for the [Invoiced](https://in
 
 ## Installing
 
-The Invoiced gem can be installed liked this:
+The Invoiced package can be installed like this:
 
 ```
 pip install invoiced
