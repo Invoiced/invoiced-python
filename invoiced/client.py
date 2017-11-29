@@ -1,22 +1,13 @@
-from invoiced.objects import (
-    CatalogItem,
-    CreditNote,
-    Customer,
-    Estimate,
-    Event,
-    File,
-    Invoice,
-    Plan,
-    Transaction,
-    Subscription)
-from invoiced import errors, util, version
 import json
+
 import requests
 from requests.auth import HTTPBasicAuth
 
+from invoiced import errors, util, version
+from invoiced.objects import CatalogItem, CreditNote, Customer, Estimate, Event, File, Invoice, Plan, Subscription, Transaction
+
 
 class Client(object):
-
     ApiBase = 'https://api.invoiced.com'
     ApiBaseSandbox = 'https://api.sandbox.invoiced.com'
 
@@ -51,7 +42,13 @@ class Client(object):
             payload = json.dumps(params, separators=(',', ':'))
 
         try:
-            resp = self.request_factory(method, opts, payload, url)
+            resp = self.request_factory(
+                method=method,
+                url=url,
+                headers=self.build_headers(opts),
+                data=payload,
+                auth=HTTPBasicAuth(self.api_key, ''),
+            )
 
             if (resp.status_code >= 400):
                 self.handle_api_error(resp)
@@ -60,20 +57,14 @@ class Client(object):
 
         return self.parse(resp)
 
-    def request_factory(self, method, opts, payload, url, *args, **kwargs):
-        resp = requests.request(
-            method, url,
-            headers=self.build_headers(opts),
-            data=payload,
-            auth=HTTPBasicAuth(self.api_key, ''),
-            *args, **kwargs,
-        )
-        return resp
+    # noinspection PyMethodMayBeStatic
+    def request_factory(self, *args, **kwargs):
+        return requests.request(*args, **kwargs)
 
     def build_headers(self, opts):
         headers = {
             'content-type': "application/json",
-            'user-agent': "Invoiced Python/"+version.VERSION
+            'user-agent': "Invoiced Python/" + version.VERSION
         }
 
         # idempotency keys
