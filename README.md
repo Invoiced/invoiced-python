@@ -52,3 +52,5 @@ client = invoiced.Client("{API_KEY}", True)
 ## Developing
 
 The test suite can be ran with `python setup.py test`. If you want to capture code coverage too with coverage.py then use `python -m coverage run setup.py test` and view the report with `python -m coverage report`.
+
+Contributions must pass the [Flake8](http://flake8.pycqa.org/en/latest/) code linter.
