@@ -51,10 +51,7 @@ class Client(object):
             payload = json.dumps(params, separators=(',', ':'))
 
         try:
-            resp = requests.request(method, url,
-                                    headers=self.build_headers(opts),
-                                    data=payload,
-                                    auth=HTTPBasicAuth(self.api_key, ''))
+            resp = self.request_factory(method, opts, payload, url)
 
             if (resp.status_code >= 400):
                 self.handle_api_error(resp)
@@ -62,6 +59,16 @@ class Client(object):
             self.handle_network_error(e)
 
         return self.parse(resp)
+
+    def request_factory(self, method, opts, payload, url, *args, **kwargs):
+        resp = requests.request(
+            method, url,
+            headers=self.build_headers(opts),
+            data=payload,
+            auth=HTTPBasicAuth(self.api_key, ''),
+            *args, **kwargs,
+        )
+        return resp
 
     def build_headers(self, opts):
         headers = {
