@@ -20,6 +20,9 @@ class Client(object):
     ApiBase = 'https://api.invoiced.com'
     ApiBaseSandbox = 'https://api.sandbox.invoiced.com'
 
+    ConnectTimeout = 30
+    ReadTimeout = 60
+
     def __init__(self, api_key, sandbox=False):
         self.api_key = api_key
         self.sandbox = sandbox
@@ -54,7 +57,9 @@ class Client(object):
             resp = requests.request(method, url,
                                     headers=self.build_headers(opts),
                                     data=payload,
-                                    auth=HTTPBasicAuth(self.api_key, ''))
+                                    auth=HTTPBasicAuth(self.api_key, ''),
+                                    timeout=(self.ConnectTimeout,
+                                             self.ReadTimeout))
 
             if (resp.status_code >= 400):
                 self.handle_api_error(resp)
@@ -103,11 +108,20 @@ class Client(object):
             raise self.api_error(error, response)
 
     def handle_network_error(self, error):
-        raise errors.ApiConnectionError("There was an error connecting to "
-                                        "Invoiced. Please check your internet "
-                                        "connection or status.invoiced.com "
-                                        "for service outages. The reason was: "
-                                        + str(error))
+        if isinstance(error, requests.exceptions.ConnectTimeout):
+            message = ("Timed out while connecting to Invoiced. "
+                       "Please check your internet connection or "
+                       "status.invoiced.com for service outages.")
+        elif isinstance(error, requests.exceptions.ReadTimeout):
+            message = "The request timed out reading data from the server."
+        else:
+            message = ("There was an error connecting to "
+                       "Invoiced. Please check your internet "
+                       "connection or status.invoiced.com "
+                       "for service outages. The reason was: "
+                       + str(error))
+
+        raise errors.ApiConnectionError(message)
 
     def authentication_error(self, error, response):
         return errors.AuthenticationError(error["message"],

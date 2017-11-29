@@ -2,7 +2,7 @@ import unittest
 import invoiced
 import responses
 import json
-from requests.exceptions import HTTPError
+from requests.exceptions import HTTPError, ConnectTimeout, ReadTimeout
 
 
 class TestClient(unittest.TestCase):
@@ -122,6 +122,28 @@ class TestClient(unittest.TestCase):
         responses.add(responses.GET,
                       'https://api.invoiced.com/invoices',
                       body=HTTPError('Something went wrong'))
+
+        client = invoiced.Client('test')
+
+        with self.assertRaises(invoiced.errors.ApiConnectionError):
+            client.request("GET", "/invoices")
+
+    @responses.activate
+    def test_connect_timeout(self):
+        responses.add(responses.GET,
+                      'https://api.invoiced.com/invoices',
+                      body=ConnectTimeout('Something went wrong'))
+
+        client = invoiced.Client('test')
+
+        with self.assertRaises(invoiced.errors.ApiConnectionError):
+            client.request("GET", "/invoices")
+
+    @responses.activate
+    def test_read_timeout(self):
+        responses.add(responses.GET,
+                      'https://api.invoiced.com/invoices',
+                      body=ReadTimeout('Something went wrong'))
 
         client = invoiced.Client('test')
 
