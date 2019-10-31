@@ -78,4 +78,4 @@ class TestCatalogItem(unittest.TestCase):
 
         catalog_item = invoiced.CatalogItem(self.client, "paper")
         self.assertTrue(catalog_item.delete())
-        self.assertEquals(catalog_item.name, "More Paper")
+        self.assertEqual(catalog_item.name, "More Paper")

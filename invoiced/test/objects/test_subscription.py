@@ -78,4 +78,13 @@ class TestSubscription(unittest.TestCase):
 
         subscription = invoiced.Subscription(self.client, 123)
         self.assertTrue(subscription.cancel())
-        self.assertEquals(subscription.status, "canceled")
+        self.assertEqual(subscription.status, "canceled")
+
+    @responses.activate
+    def test_preview(self):
+        responses.add('POST', 'https://api.invoiced.com/subscriptions/preview',
+                      status=200,
+                      json={"first_invoice": {"id": False}, "mrr": 9})
+
+        subscription = self.client.Subscription.preview(customer=1234, plan="enterprise")
+        self.assertEqual(subscription.first_invoice, {'id': False})

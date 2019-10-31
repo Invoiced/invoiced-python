@@ -4,6 +4,7 @@ from invoiced.objects import (  # noqa
     Attachment,
     CatalogItem,
     Contact,
+    Coupon,
     CreditNote,
     Customer,
     Email,
@@ -11,9 +12,14 @@ from invoiced.objects import (  # noqa
     Event,
     File,
     Invoice,
+    Letter,
     LineItem,
+    Note,
     PaymentPlan,
     Plan,
     Subscription,
+    Task,
+    TaxRate,
+    TextMessage,
     Transaction)
 from invoiced.operations import List  # noqa

@@ -78,4 +78,4 @@ class TestPlan(unittest.TestCase):
 
         plan = invoiced.Plan(self.client, "starter")
         self.assertTrue(plan.delete())
-        self.assertEquals(plan.name, "Pro")
+        self.assertEqual(plan.name, "Pro")
