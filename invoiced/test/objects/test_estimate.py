@@ -126,3 +126,15 @@ class TestEstimate(unittest.TestCase):
         self.assertIsInstance(invoice, invoiced.Invoice)
         self.assertEqual(invoice.id, 456)
         self.assertEqual(invoice.total, 500)
+
+    @responses.activate
+    def test_void(self):
+        responses.add('POST', 'https://api.invoiced.com/estimates/123/void',
+                      status=200,
+                      json={"id": 123, "status": 'voided'})
+
+        estimate = invoiced.Estimate(self.client, 123)
+        estimate.void()
+
+        self.assertIsInstance(estimate, invoiced.Estimate)
+        self.assertEqual(estimate.status, 'voided')

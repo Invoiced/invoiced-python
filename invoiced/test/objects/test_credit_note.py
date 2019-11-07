@@ -112,3 +112,15 @@ class TestCreditNote(unittest.TestCase):
 
         self.assertIsInstance(metadata, invoiced.List)
         self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
+    def test_void(self):
+        responses.add('POST', 'https://api.invoiced.com/credit_notes/123/void',
+                      status=200,
+                      json={"id": 123, "status": 'voided'})
+
+        credit_note = invoiced.CreditNote(self.client, 123)
+        credit_note.void()
+
+        self.assertIsInstance(credit_note, invoiced.CreditNote)
+        self.assertEqual(credit_note.status, 'voided')

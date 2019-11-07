@@ -58,6 +58,15 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
 
         return attachments, metadata
 
+    def void(self):
+        endpoint = self.endpoint()+'/void'
+        response = self._client.request('POST', endpoint)
+
+        # update the local values with the response
+        self.refresh_from(response['body'])
+
+        return response['code'] == 200
+
 
 class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
@@ -175,6 +184,15 @@ class Estimate(CreateableObject, DeleteableObject, ListableObject,
         # build invoice object
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
+
+    def void(self):
+        endpoint = self.endpoint()+'/void'
+        response = self._client.request('POST', endpoint)
+
+        # update the local values with the response
+        self.refresh_from(response['body'])
+
+        return response['code'] == 200
 
 
 class Event(ListableObject):
