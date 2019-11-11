@@ -334,7 +334,7 @@ class Subscription(CreateableObject, DeleteableObject, ListableObject,
         self._endpoint = "/subscriptions/preview"
         repsonse = self._client.request('POST', self.endpoint(), params)
 
-        return util.convert_preview_to_object(self, repsonse['body'])
+        return repsonse['body']
 
 class Task(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):

@@ -13,14 +13,6 @@ def convert_to_object(_class, values):
     return obj
 
 
-def convert_preview_to_object(_class, values):
-    c = _class.__class__
-    obj = c(_class._client, 'false', values)
-    obj.set_endpoint_base(_class.endpoint_base)
-
-    return obj
-
-
 def uri_encode(params):
     return '&'.join(map(lambda pair: "%s=%s" % pair, _flatten_params(params)))
 

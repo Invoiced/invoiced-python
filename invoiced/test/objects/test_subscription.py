@@ -86,5 +86,5 @@ class TestSubscription(unittest.TestCase):
                       status=200,
                       json={"first_invoice": {"id": False}, "mrr": 9})
 
-        subscription = self.client.Subscription.preview(customer=1234, plan="enterprise")
-        self.assertEqual(subscription.first_invoice, {'id': False})
+        preview = self.client.Subscription.preview(customer=1234, plan="enterprise")
+        self.assertEqual(preview['first_invoice'], {'id': False})
