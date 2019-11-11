@@ -21,6 +21,9 @@ class Contact(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
     pass
 
+class Coupon(CreateableObject, DeleteableObject, ListableObject,
+              UpdateableObject):
+    pass
 
 class CreditNote(CreateableObject, DeleteableObject, ListableObject,
                  UpdateableObject):
@@ -55,6 +58,15 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
 
         return attachments, metadata
 
+    def void(self):
+        endpoint = self.endpoint()+'/void'
+        response = self._client.request('POST', endpoint)
+
+        # update the local values with the response
+        self.refresh_from(response['body'])
+
+        return response['code'] == 200
+
 
 class Customer(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
@@ -68,6 +80,24 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         email = Email(self._client)
         return util.build_objects(email, response['body'])
 
+    def send_statement_sms(self, idempotency_key=None, **params):
+        endpoint = self.endpoint()+"/text_messages"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
+
+        # build text message objects
+        text_message = TextMessage(self._client)
+        return util.build_objects(text_message, response['body'])
+
+    def send_statement_letter(self, idempotency_key=None, **params):
+        endpoint = self.endpoint()+"/letters"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
+
+        # build letter objects
+        letter = Letter(self._client)
+        return util.build_objects(letter, response['body'])
+
     def balance(self):
         endpoint = self.endpoint()+"/balance"
         response = self._client.request('GET', endpoint)
@@ -79,6 +109,12 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         contact.set_endpoint_base(self.endpoint())
 
         return contact
+
+    def list_notes(self):
+        note = Note(self._client)
+        note.set_endpoint_base(self.endpoint())
+
+        return note
 
     def line_items(self):
         line = LineItem(self._client)
@@ -95,6 +131,13 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
 
+    def consolidate_invoices(self, **params):
+        endpoint = self.endpoint()+"/consolidate_invoices"
+        response = self._client.request('POST', endpoint, params)
+
+        # build invoice object
+        invoice = Invoice(self._client)
+        return util.convert_to_object(invoice, response['body'])
 
 class Email(InvoicedObject):
     pass
@@ -142,6 +185,15 @@ class Estimate(CreateableObject, DeleteableObject, ListableObject,
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
 
+    def void(self):
+        endpoint = self.endpoint()+'/void'
+        response = self._client.request('POST', endpoint)
+
+        # update the local values with the response
+        self.refresh_from(response['body'])
+
+        return response['code'] == 200
+
 
 class Event(ListableObject):
     pass
@@ -162,6 +214,24 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
+
+    def send_sms(self, idempotency_key=None, **opts):
+        endpoint = self.endpoint()+"/text_messages"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, {}, opts)
+
+        # build text message objects
+        text_message = TextMessage(self._client)
+        return util.build_objects(text_message, response['body'])
+
+    def send_letter(self, idempotency_key=None, **opts):
+        endpoint = self.endpoint()+"/letters"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, {}, opts)
+
+        # build letter objects
+        letter = Letter(self._client)
+        return util.build_objects(letter, response['body'])
 
     def pay(self, idempotency_key=None, **opts):
         endpoint = self.endpoint()+"/pay"
@@ -194,17 +264,37 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
 
         return attachments, metadata
 
+    def notes(self):
+        note = Note(self._client)
+        note.set_endpoint_base(self.endpoint())
+
+        return note
+
     def payment_plan(self):
         paymentPlan = PaymentPlan(self._client)
         paymentPlan.set_endpoint_base(self.endpoint())
 
         return paymentPlan
 
+    def void(self):
+        endpoint = self.endpoint()+'/void'
+        response = self._client.request('POST', endpoint)
+
+        # update the local values with the response
+        self.refresh_from(response['body'])
+
+        return response['code'] == 200
+
+class Letter(InvoicedObject):
+    pass
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
     pass
 
+class Note(CreateableObject, DeleteableObject, ListableObject,
+           UpdateableObject):
+    pass
 
 class PaymentPlan(DeleteableObject):
 
@@ -234,13 +324,28 @@ class Plan(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):
     pass
 
-
 class Subscription(CreateableObject, DeleteableObject, ListableObject,
                    UpdateableObject):
 
     def cancel(self):
         return self.delete()
 
+    def preview(self, **params):
+        self._endpoint = "/subscriptions/preview"
+        repsonse = self._client.request('POST', self.endpoint(), params)
+
+        return repsonse['body']
+
+class Task(CreateableObject, DeleteableObject, ListableObject,
+           UpdateableObject):
+    pass
+
+class TaxRate(CreateableObject, DeleteableObject, ListableObject,
+              UpdateableObject):
+    pass
+
+class TextMessage(InvoicedObject):
+    pass
 
 class Transaction(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
@@ -256,6 +361,13 @@ class Transaction(CreateableObject, DeleteableObject, ListableObject,
 
     def refund(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/refunds"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
+
+        return util.convert_to_object(self, response['body'])
+
+    def initiate_charge(self, idempotency_key=None, **params):
+        endpoint = self._endpoint='/charges'
         opts = {'idempotency_key': idempotency_key}
         response = self._client.request('POST', endpoint, params, opts)
 

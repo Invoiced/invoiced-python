@@ -93,6 +93,34 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(emails[0].id, 4567)
 
     @responses.activate
+    def test_send_statement_sms(self):
+        responses.add('POST', 'https://api.invoiced.com/customers/123/text_messages',
+                      status=201,
+                      json=[{"id": 890, "message": "example"}])
+
+        customer = invoiced.Customer(self.client, 123)
+        text_messages = customer.send_statement_sms(message="example")
+
+        self.assertEqual(type(text_messages), list)
+        self.assertEqual(len(text_messages), 1)
+        self.assertIsInstance(text_messages[0], invoiced.TextMessage)
+        self.assertEqual(text_messages[0].id, 890)
+
+    @responses.activate
+    def test_send_statement_letter(self):
+        responses.add('POST', 'https://api.invoiced.com/customers/123/letters',
+                      status=201,
+                      json=[{"id": 891, "state": "queued"}])
+
+        customer = invoiced.Customer(self.client, 123)
+        letters = customer.send_statement_letter()
+
+        self.assertEqual(type(letters), list)
+        self.assertEqual(len(letters), 1)
+        self.assertIsInstance(letters[0], invoiced.Letter)
+        self.assertEqual(letters[0].id, 891)
+
+    @responses.activate
     def test_balance(self):
         responses.add('GET',
                       'https://api.invoiced.com/customers/123/balance',
@@ -159,6 +187,54 @@ class TestCustomer(unittest.TestCase):
         self.assertEqual(metadata.total_count, 10)
 
     @responses.activate
+    def test_create_note(self):
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/notes',
+                      status=201,
+                      json={"id": 567, "notes": "Text of note"})
+
+        customer = invoiced.Customer(self.client, 123)
+        note = customer.list_notes().create(customer_id=123, notes="Text of note")
+
+        self.assertIsInstance(note, invoiced.Note)
+        self.assertEqual(note.id, 567)
+        self.assertEqual(note.notes, "Text of note")
+
+    @responses.activate
+    def test_retrieve_note(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/notes/567',
+                      status=200,
+                      json={"id": 567, "notes": "Text of note"})
+
+        customer = invoiced.Customer(self.client, 123)
+        note = customer.list_notes().retrieve(567)
+
+        self.assertIsInstance(note, invoiced.Note)
+        self.assertEqual(note.id, 567)
+        self.assertEqual(note.notes, "Text of note")
+
+    @responses.activate
+    def test_list_notes(self):
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/123/notes',
+                      status=200,
+                      json=[{"id": 567, "notes": "Text of note"}],
+                      adding_headers={
+                        'x-total-count': '10',
+                        'link': '<https://api.invoiced.com/customers/123/notes?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers/123/notes?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers/123/notes?per_page=25&page=1>; rel="last"'})  # noqa
+
+        customer = invoiced.Customer(self.client, 123)
+        notes, metadata = customer.list_notes().list()
+
+        self.assertIsInstance(notes, list)
+        self.assertEqual(len(notes), 1)
+        self.assertEqual(notes[0].id, 567)
+
+        self.assertIsInstance(metadata, invoiced.List)
+        self.assertEqual(metadata.total_count, 10)
+
+    @responses.activate
     def test_create_pending_line_item(self):
         responses.add('POST',
                       'https://api.invoiced.com/customers/123/line_items',
@@ -219,3 +295,17 @@ class TestCustomer(unittest.TestCase):
         self.assertIsInstance(invoice, invoiced.Invoice)
         self.assertEqual(invoice.id, 456)
         self.assertEqual(invoice.total, 500)
+
+    @responses.activate
+    def test_consolidate_invoices(self):
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/consolidate_invoices',
+                      status=201,
+                      json={"id": 123456, "total": 567890})
+
+        customer = invoiced.Customer(self.client, 123)
+        invoice = customer.consolidate_invoices()
+
+        self.assertIsInstance(invoice, invoiced.Invoice)
+        self.assertEqual(invoice.id, 123456)
+        self.assertEqual(invoice.total, 567890)

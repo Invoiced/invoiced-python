@@ -7,3 +7,4 @@
 *.egg
 .coverage
 example.py
+.DS_Store

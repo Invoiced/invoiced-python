@@ -1,12 +1,18 @@
 from invoiced.objects import (
     CatalogItem,
+    Coupon,
     CreditNote,
     Customer,
     Estimate,
     Event,
     File,
     Invoice,
+    Letter,
+    Note,
     Plan,
+    Task,
+    TaxRate,
+    TextMessage,
     Transaction,
     Subscription)
 from invoiced import errors, util, version
@@ -30,14 +36,18 @@ class Client(object):
 
         # Object endpoints
         self.CatalogItem = CatalogItem(self)
+        self.Coupon = Coupon(self)
         self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
         self.Estimate = Estimate(self)
         self.Event = Event(self)
         self.File = File(self)
         self.Invoice = Invoice(self)
+        self.Note = Note(self)
         self.Plan = Plan(self)
         self.Subscription = Subscription(self)
+        self.Task = Task(self)
+        self.TaxRate = TaxRate(self)
         self.Transaction = Transaction(self)
 
     def request(self, method, endpoint, params={}, opts={}):

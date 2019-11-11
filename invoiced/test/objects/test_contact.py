@@ -52,7 +52,7 @@ class TestContact(unittest.TestCase):
         contact.name = 600
         self.assertTrue(contact.save())
 
-        self.assertTrue(contact.name)
+        self.assertEqual(contact.name, 600)
 
     @responses.activate
     def test_list(self):
