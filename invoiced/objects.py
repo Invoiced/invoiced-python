@@ -333,7 +333,11 @@ class PaymentSource(CreateableObject, DeleteableObject, ListableObject):
         elif self.object == "bank_account":
             self._endpoint = '/bank_account/' + str(self.id)
 
-        return super().delete()
+        if super().delete():
+            return True
+        else:
+            self._endpoint = "/payment_sources/" + str(self.id)
+            return False
 
 
 class Plan(CreateableObject, DeleteableObject, ListableObject,
