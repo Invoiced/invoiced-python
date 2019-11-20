@@ -54,9 +54,9 @@ class TestPaymentSource(unittest.TestCase):
     def test_delete(self):
         responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
                       status=201,
-                      json={"id": 123})
+                      json={"id": 123, "object": "card"})
 
-        responses.add('DELETE', 'https://api.invoiced.com/customers/1234/payment_sources/123',
+        responses.add('DELETE', 'https://api.invoiced.com/customers/1234/card/123',
                       status=204)
 
         customer = invoiced.Customer(self.client, 1234)

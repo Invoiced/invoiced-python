@@ -326,7 +326,14 @@ class PaymentPlan(DeleteableObject):
         return self.delete()
 
 class PaymentSource(CreateableObject, DeleteableObject, ListableObject):
-    pass
+    
+    def delete(self):
+        if self.object == "card":
+            self._endpoint = '/card/' + str(self.id)
+        elif self.object == "bank_account":
+            self._endpoint = '/bank_account/' + str(self.id)
+
+        return super().delete()
 
 
 class Plan(CreateableObject, DeleteableObject, ListableObject,
