@@ -331,7 +331,7 @@ class PaymentSource(CreateableObject, DeleteableObject, ListableObject):
         if self.object == "card":
             self._endpoint = '/cards/' + str(self.id)
         elif self.object == "bank_account":
-            self._endpoint = '/bank_accounts' + str(self.id)
+            self._endpoint = '/bank_accounts/' + str(self.id)
 
         if super().delete():
             return True
