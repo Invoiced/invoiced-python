@@ -122,6 +122,12 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
         return line
 
+    def payment_sources(self):
+        source = PaymentSource(self._client)
+        source.set_endpoint_base(self.endpoint())
+
+        return source
+
     def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoices"
         opts = {'idempotency_key': idempotency_key}
@@ -318,6 +324,9 @@ class PaymentPlan(DeleteableObject):
 
     def cancel(self):
         return self.delete()
+
+class PaymentSource(CreateableObject, DeleteableObject, ListableObject):
+    pass
 
 
 class Plan(CreateableObject, DeleteableObject, ListableObject,

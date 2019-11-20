@@ -16,6 +16,7 @@ from invoiced.objects import (  # noqa
     LineItem,
     Note,
     PaymentPlan,
+    PaymentSource,
     Plan,
     Subscription,
     Task,
