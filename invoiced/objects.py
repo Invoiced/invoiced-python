@@ -12,6 +12,35 @@ class Attachment(InvoicedObject):
     pass
 
 
+class BankAccount(CreateableObject, DeleteableObject):
+    def create(self, idempotency_key=None, **params):
+        params["method"] = "bank_account"
+        self._endpoint = "/payment_sources"
+
+        obj = super().create(idempotency_key=idempotency_key, params=params)
+
+        self._endpoint = "/bank_accounts"
+
+        if id:
+            self._endpoint = self._endpoint + '/' + str(id)
+
+        return obj
+
+class Card(CreateableObject, DeleteableObject):
+    def create(self, idempotency_key=None, **params):
+        params["method"] = "card"
+        self._endpoint = "/payment_sources"
+
+        return super().create(idempotency_key=idempotency_key, params=params)
+
+        self._endpoint = "/cards"
+
+        if id:
+            self._endpoint = self._endpoint + '/' + str(id)
+
+        return obj
+
+
 class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
     pass
@@ -127,6 +156,20 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         source.set_endpoint_base(self.endpoint())
 
         return source
+
+    def bank_accounts(self):
+        bank_account = BankAccount(self._client)
+        bank_account.set_endpoint_base(self.endpoint())
+
+        return bank_account
+
+
+    def cards(self):
+        card = Card(self._client)
+        card.set_endpoint_base(self.endpoint())
+
+        return card
+
 
     def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoices"
@@ -325,19 +368,35 @@ class PaymentPlan(DeleteableObject):
     def cancel(self):
         return self.delete()
 
-class PaymentSource(CreateableObject, DeleteableObject, ListableObject):
-    
-    def delete(self):
-        if self.object == "card":
-            self._endpoint = '/cards/' + str(self.id)
-        elif self.object == "bank_account":
-            self._endpoint = '/bank_accounts/' + str(self.id)
+class PaymentSource(ListableObject):
+    def list(self, **opts):
+        response = self._client.request('GET', self.endpoint(), opts)
 
-        if super().delete():
-            return True
-        else:
-            self._endpoint = "/payment_sources/" + str(self.id)
-            return False
+        # build objects
+        objects = util.build_objects(self, response['body'])
+
+        output = []
+
+        # convert objects into cards and bank accounts
+        for obj in objects:
+            if obj.object == "card":
+                card = Card(self._client)
+                card.refresh_from(obj)
+                card.set_endpoint_base(self.endpoint_base())
+                output.append(card)
+            elif obj.object == "bank_account":
+                acct = BankAccount(self._client)
+                acct.refresh_from(obj)
+                acct.set_endpoint_base(self.endpoint_base())
+                output.append(acct)
+            else:
+                output.append(obj)
+
+        # store the metadata from the list operation
+        metadata = List(response['headers']['link'],
+                        response['headers']['x-total-count'])
+
+        return output, metadata
 
 
 class Plan(CreateableObject, DeleteableObject, ListableObject,
