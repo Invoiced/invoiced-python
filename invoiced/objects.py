@@ -15,10 +15,10 @@ class Attachment(InvoicedObject):
 class BankAccount(CreateableObject, DeleteableObject):
     def create(self, idempotency_key=None, **params):
         params["method"] = "bank_account"
+        
+        # change endpoint just for this operation
         self._endpoint = "/payment_sources"
-
         output = super().create(idempotency_key=idempotency_key, params=params)
-
         self._endpoint = "/bank_accounts"
 
         if id:
@@ -29,10 +29,10 @@ class BankAccount(CreateableObject, DeleteableObject):
 class Card(CreateableObject, DeleteableObject):
     def create(self, idempotency_key=None, **params):
         params["method"] = "card"
+
+        # change endpoint just for this operation
         self._endpoint = "/payment_sources"
-
         output = super().create(idempotency_key=idempotency_key, params=params)
-
         self._endpoint = "/cards"
 
         if id:
