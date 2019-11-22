@@ -17,28 +17,28 @@ class BankAccount(CreateableObject, DeleteableObject):
         params["method"] = "bank_account"
         self._endpoint = "/payment_sources"
 
-        obj = super().create(idempotency_key=idempotency_key, params=params)
+        output = super().create(idempotency_key=idempotency_key, params=params)
 
         self._endpoint = "/bank_accounts"
 
         if id:
             self._endpoint = self._endpoint + '/' + str(id)
 
-        return obj
+        return output
 
 class Card(CreateableObject, DeleteableObject):
     def create(self, idempotency_key=None, **params):
         params["method"] = "card"
         self._endpoint = "/payment_sources"
 
-        return super().create(idempotency_key=idempotency_key, params=params)
+        output = super().create(idempotency_key=idempotency_key, params=params)
 
         self._endpoint = "/cards"
 
         if id:
             self._endpoint = self._endpoint + '/' + str(id)
 
-        return obj
+        return output
 
 
 class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
