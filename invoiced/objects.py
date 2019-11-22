@@ -163,13 +163,11 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
 
         return bank_account
 
-
     def cards(self):
         card = Card(self._client)
         card.set_endpoint_base(self.endpoint())
 
         return card
-
 
     def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoices"
