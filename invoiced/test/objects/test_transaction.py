@@ -112,10 +112,10 @@ class TestTransaction(unittest.TestCase):
                       'https://api.invoiced.com/charges',
                        status=201,
                        json={"id": "a1b2c3", "amount": 100,
-                             "object": "card"})
+                             "object": "charge"})
 
         transaction = self.client.Transaction.initiate_charge(amount=100, payment_source_type="card")
 
         self.assertIsInstance(transaction, invoiced.Transaction)
         self.assertEqual(transaction.id, "a1b2c3")
-        self.assertEqual(transaction.object, "card")
+        self.assertEqual(transaction.object, "charge")
