@@ -1,5 +1,6 @@
 from invoiced.operations import (
     InvoicedObject,
+    PaymentSourceObject,
     CreateableObject,
     DeleteableObject,
     ListableObject,
@@ -11,17 +12,15 @@ from invoiced import util
 class Attachment(InvoicedObject):
     pass
 
-
-class BankAccount(DeleteableObject):
+class BankAccount(PaymentSourceObject, DeleteableObject):
     pass
 
-class Card(DeleteableObject):
+class Card(PaymentSourceObject, DeleteableObject):
     pass
 
 class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
     pass
-
 
 class Contact(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
@@ -133,18 +132,6 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         source.set_endpoint_base(self.endpoint())
 
         return source
-
-    def bank_accounts(self):
-        bank_account = BankAccount(self._client)
-        bank_account.set_endpoint_base(self.endpoint())
-
-        return bank_account
-
-    def cards(self):
-        card = Card(self._client)
-        card.set_endpoint_base(self.endpoint())
-
-        return card
 
     def invoice(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/invoices"
