@@ -1,13 +1,26 @@
 import urllib
 
-
 def build_objects(_class, objects):
     return list(map(lambda obj: convert_to_object(_class, obj), objects))
 
 
 def convert_to_object(_class, values):
     c = _class.__class__
-    obj = c(_class._client, values['id'], values)
+
+    obj = None
+
+    # handle special cases w/ Card, BankAccount
+    if 'object' in values.keys():
+        if values['object'] == 'card':
+            from invoiced import Card
+            obj = Card(_class._client, values['id'], values)
+        elif values['object'] == 'bank_account':
+            from invoiced import BankAccount
+            obj = BankAccount(_class._client, values['id'], values)
+
+    if obj is None:
+        obj = c(_class._client, values['id'], values)
+
     obj.set_endpoint_base(_class.endpoint_base())
 
     return obj

@@ -107,6 +107,9 @@ class InvoicedObject(dict):
         return json.dumps(self, sort_keys=True, indent=2)
 
 
+class PaymentSourceObject(InvoicedObject):
+    pass
+
 class CreateableObject(InvoicedObject):
 
     def create(self, idempotency_key=None, **params):

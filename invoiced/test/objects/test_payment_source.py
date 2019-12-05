@@ -12,10 +12,10 @@ class TestPaymentSource(unittest.TestCase):
     def test_endpoint_and_create_bank_account(self):
         responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
                       status=201,
-                      json={"id": 123})
+                      json={"id": 123, "object": "bank_account"})
 
         customer = invoiced.Customer(self.client, 1234)
-        source = customer.bank_accounts().create()
+        source = customer.payment_sources().create()
         # if true, endpoint on creation is correct
         self.assertEqual(123, source.id)
         # if true, endpoint after creation is correct
@@ -25,10 +25,10 @@ class TestPaymentSource(unittest.TestCase):
     def test_endpoint_and_create_card(self):
         responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
                       status=201,
-                      json={"id": 456})
+                      json={"id": 456, "object": "card"})
 
         customer = invoiced.Customer(self.client, 1234)
-        source = customer.cards().create()
+        source = customer.payment_sources().create()
         # if true, endpoint on creation is correct
         self.assertEqual(456, source.id)
         # if true, endpoint after creation is correct
@@ -65,7 +65,7 @@ class TestPaymentSource(unittest.TestCase):
                       status=204)
 
         customer = invoiced.Customer(self.client, 1234)
-        source = customer.cards().create()
+        source = customer.payment_sources().create()
 
         self.assertIsInstance(source, invoiced.Card)
         self.assertTrue(source.delete())
@@ -80,7 +80,7 @@ class TestPaymentSource(unittest.TestCase):
                       status=204)
 
         customer = invoiced.Customer(self.client, 1234)
-        source = customer.bank_accounts().create()
+        source = customer.payment_sources().create()
 
         self.assertIsInstance(source, invoiced.BankAccount)
         self.assertTrue(source.delete())
