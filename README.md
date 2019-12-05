@@ -54,3 +54,13 @@ client = invoiced.Client("{API_KEY}", True)
 The test suite can be ran with `python setup.py test`. If you want to capture code coverage too with coverage.py then use `python -m coverage run setup.py test` and view the report with `python -m coverage report`.
 
 Contributions must pass the [Flake8](http://flake8.pycqa.org/en/latest/) code linter.
+
+## Deploying
+
+The package can be uploaded to pypi with the following commands:
+
+```
+python setup.py sdist
+python setup.py bdist_wheel
+twine upload dist/*
+```
