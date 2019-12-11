@@ -5,6 +5,7 @@ This repository contains the Python client library for the [Invoiced](https://in
 
 [![Build Status](https://travis-ci.org/Invoiced/invoiced-python.svg?branch=master)](https://travis-ci.org/Invoiced/invoiced-python)
 [![Coverage Status](https://coveralls.io/repos/Invoiced/invoiced-python/badge.svg?branch=master&service=github)](https://coveralls.io/github/Invoiced/invoiced-python?branch=master)
+[![PyPI version](https://badge.fury.io/py/invoiced.svg)](https://badge.fury.io/py/invoiced)
 
 ## Installing
 
