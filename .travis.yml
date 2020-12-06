@@ -10,7 +10,7 @@ python:
 sudo: false
 
 install:
-  - if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then pip install coverage==3.7.1 python-coveralls; fi
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.5' ]]; then pip install python-coveralls; fi
   - pip install flake8
 
 script:
