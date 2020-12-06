@@ -67,8 +67,8 @@ class TestTask(unittest.TestCase):
         responses.add('GET', 'https://api.invoiced.com/tasks',
                       status=200,
                       json=[{"id": 123, "user_id": 234, "customer_id": 345,
-                            "name": "2nd Call", "action": "phone",
-                            "due_date": 1234567890}],
+                             "name": "2nd Call", "action": "phone",
+                             "due_date": 1234567890}],
                       adding_headers={
                         'x-total-count': '15',
                         'link': '<https://api.invoiced.com/tasks?per_page=25&page=1>; rel="self", <https://api.invoiced.com/tasks?per_page=25&page=1>; rel="first", <https://api.invoiced.com/tasks?per_page=25&page=1>; rel="last"'})  # noqa

@@ -110,11 +110,12 @@ class TestTransaction(unittest.TestCase):
     def test_initiate_charge(self):
         responses.add('POST',
                       'https://api.invoiced.com/charges',
-                       status=201,
-                       json={"id": "a1b2c3", "amount": 100,
-                             "object": "charge"})
+                      status=201,
+                      json={"id": "a1b2c3", "amount": 100,
+                            "object": "charge"})
 
-        transaction = self.client.Transaction.initiate_charge(amount=100, payment_source_type="card")
+        transaction = self.client.Transaction.initiate_charge(amount=100,
+                                                              payment_source_type="card") # noqa
 
         self.assertIsInstance(transaction, invoiced.Transaction)
         self.assertEqual(transaction.id, "a1b2c3")

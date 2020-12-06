@@ -16,11 +16,13 @@ class TestCharge(unittest.TestCase):
     def test_create(self):
         responses.add('POST',
                       'https://api.invoiced.com/charges',
-                       status=201,
-                       json={"id": "a1b2c3", "amount": 100,
-                             "object": "charge"})
+                      status=201,
+                      json={"id": "a1b2c3",
+                            "amount": 100,
+                            "object": "charge"})
 
-        charge = self.client.Charge.create(amount=100, payment_source_type="card")
+        charge = self.client.Charge.create(amount=100,
+                                           payment_source_type="card")
 
         self.assertIsInstance(charge, invoiced.Payment)
         self.assertEqual(charge.id, "a1b2c3")

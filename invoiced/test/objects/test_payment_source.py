@@ -10,7 +10,8 @@ class TestPaymentSource(unittest.TestCase):
 
     @responses.activate
     def test_endpoint_and_create_bank_account(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/1234/payment_sources', # noqa
                       status=201,
                       json={"id": 123, "object": "bank_account"})
 
@@ -19,11 +20,13 @@ class TestPaymentSource(unittest.TestCase):
         # if true, endpoint on creation is correct
         self.assertEqual(123, source.id)
         # if true, endpoint after creation is correct
-        self.assertEqual("/customers/1234/bank_accounts/123", source.endpoint())
+        self.assertEqual("/customers/1234/bank_accounts/123",
+                         source.endpoint())
 
     @responses.activate
     def test_endpoint_and_create_card(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/1234/payment_sources', # noqa
                       status=201,
                       json={"id": 456, "object": "card"})
 
@@ -36,9 +39,12 @@ class TestPaymentSource(unittest.TestCase):
 
     @responses.activate
     def test_list(self):
-        responses.add('GET', 'https://api.invoiced.com/customers/1234/payment_sources',
+        responses.add('GET',
+                      'https://api.invoiced.com/customers/1234/payment_sources', # noqa
                       status=200,
-                      json=[{"id": 123, "object": "bank_account"},{"id": 456, "object": "card"}],
+                      json=[
+                          {"id": 123, "object": "bank_account"},
+                          {"id": 456, "object": "card"}],
                       adding_headers={
                         'x-total-count': '15',
                         'link': '<https://api.invoiced.com/payment_sources?per_page=25&page=1>; rel="self", <https://api.invoiced.com/payment_sources?per_page=25&page=1>; rel="first", <https://api.invoiced.com/contacts?per_page=25&page=1>; rel="last"'})  # noqa
@@ -57,11 +63,13 @@ class TestPaymentSource(unittest.TestCase):
 
     @responses.activate
     def test_delete_card(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/1234/payment_sources', # noqa
                       status=201,
                       json={"id": 123, "object": "card"})
 
-        responses.add('DELETE', 'https://api.invoiced.com/customers/1234/cards/123',
+        responses.add('DELETE',
+                      'https://api.invoiced.com/customers/1234/cards/123',
                       status=204)
 
         customer = invoiced.Customer(self.client, 1234)
@@ -72,11 +80,13 @@ class TestPaymentSource(unittest.TestCase):
 
     @responses.activate
     def test_delete_bank_account(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/1234/payment_sources',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/1234/payment_sources', # noqa
                       status=201,
                       json={"id": 123, "object": "bank_account"})
 
-        responses.add('DELETE', 'https://api.invoiced.com/customers/1234/bank_accounts/123',
+        responses.add('DELETE',
+                      'https://api.invoiced.com/customers/1234/bank_accounts/123', # noqa
                       status=204)
 
         customer = invoiced.Customer(self.client, 1234)

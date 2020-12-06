@@ -47,5 +47,6 @@ class TestUtil(unittest.TestCase):
         encoded = util.uri_encode(params)
         self.assertEqual(encoded, "array[]=should&array[][also]=True&array[]=work&filter[levels]=work&filter[nesting][works]=True&test=property")  # noqa
 
+
 if __name__ == '__main__':
     unittest.main()

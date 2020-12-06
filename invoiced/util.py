@@ -1,5 +1,6 @@
 import urllib
 
+
 def build_objects(_class, objects):
     return list(map(lambda obj: convert_to_object(_class, obj), objects))
 

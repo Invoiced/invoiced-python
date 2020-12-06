@@ -94,7 +94,8 @@ class TestInvoice(unittest.TestCase):
 
     @responses.activate
     def test_send_sms(self):
-        responses.add('POST', 'https://api.invoiced.com/invoices/123/text_messages',
+        responses.add('POST',
+                      'https://api.invoiced.com/invoices/123/text_messages',
                       status=201,
                       json=[{"id": 9876, "message": "example"}])
 
@@ -198,7 +199,6 @@ class TestInvoice(unittest.TestCase):
 
         self.assertIsInstance(metadata, invoiced.List)
         self.assertEqual(metadata.total_count, 10)
-
 
     @responses.activate
     def test_create_payment_plan(self):

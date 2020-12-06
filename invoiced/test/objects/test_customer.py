@@ -94,7 +94,8 @@ class TestCustomer(unittest.TestCase):
 
     @responses.activate
     def test_send_statement_sms(self):
-        responses.add('POST', 'https://api.invoiced.com/customers/123/text_messages',
+        responses.add('POST',
+                      'https://api.invoiced.com/customers/123/text_messages', # noqa
                       status=201,
                       json=[{"id": 890, "message": "example"}])
 
@@ -194,7 +195,8 @@ class TestCustomer(unittest.TestCase):
                       json={"id": 567, "notes": "Text of note"})
 
         customer = invoiced.Customer(self.client, 123)
-        note = customer.list_notes().create(customer_id=123, notes="Text of note")
+        note = customer.list_notes().create(customer_id=123,
+                                            notes="Text of note")
 
         self.assertIsInstance(note, invoiced.Note)
         self.assertEqual(note.id, 567)
@@ -299,7 +301,7 @@ class TestCustomer(unittest.TestCase):
     @responses.activate
     def test_consolidate_invoices(self):
         responses.add('POST',
-                      'https://api.invoiced.com/customers/123/consolidate_invoices',
+                      'https://api.invoiced.com/customers/123/consolidate_invoices', # noqa
                       status=201,
                       json={"id": 123456, "total": 567890})
 

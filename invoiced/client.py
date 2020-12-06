@@ -109,7 +109,7 @@ class Client(object):
     def handle_api_error(self, response):
         try:
             error = json.loads(response.text)
-        except:
+        except BaseException:
             raise self.general_api_error(response.status_code, response.text)
 
         if response.status_code in (400, 403, 404):

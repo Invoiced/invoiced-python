@@ -12,15 +12,19 @@ from invoiced import util
 class Attachment(InvoicedObject):
     pass
 
+
 class BankAccount(PaymentSourceObject, DeleteableObject):
     pass
+
 
 class Card(PaymentSourceObject, DeleteableObject):
     pass
 
+
 class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
     pass
+
 
 class Charge(InvoicedObject):
     def create(self, idempotency_key=None, **params):
@@ -30,13 +34,16 @@ class Charge(InvoicedObject):
 
         return util.convert_to_object(payment, response['body'])
 
+
 class Contact(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
     pass
 
+
 class Coupon(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+             UpdateableObject):
     pass
+
 
 class CreditNote(CreateableObject, DeleteableObject, ListableObject,
                  UpdateableObject):
@@ -157,6 +164,7 @@ class Customer(CreateableObject, DeleteableObject, ListableObject,
         # build invoice object
         invoice = Invoice(self._client)
         return util.convert_to_object(invoice, response['body'])
+
 
 class Email(InvoicedObject):
     pass
@@ -304,16 +312,20 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
 
         return response['code'] == 200
 
+
 class Letter(InvoicedObject):
     pass
+
 
 class LineItem(CreateableObject, DeleteableObject, ListableObject,
                UpdateableObject):
     pass
 
+
 class Note(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):
     pass
+
 
 class Payment(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
@@ -326,6 +338,7 @@ class Payment(CreateableObject, DeleteableObject, ListableObject,
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
+
 
 class PaymentPlan(DeleteableObject):
 
@@ -350,12 +363,15 @@ class PaymentPlan(DeleteableObject):
     def cancel(self):
         return self.delete()
 
+
 class PaymentSource(CreateableObject, ListableObject):
     pass
+
 
 class Plan(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):
     pass
+
 
 class Subscription(CreateableObject, DeleteableObject, ListableObject,
                    UpdateableObject):
@@ -369,6 +385,7 @@ class Subscription(CreateableObject, DeleteableObject, ListableObject,
 
         return repsonse['body']
 
+
 class Refund(InvoicedObject):
 
     def create(self, charge_id, idempotency_key=None, **params):
@@ -378,16 +395,20 @@ class Refund(InvoicedObject):
 
         return util.convert_to_object(self, response['body'])
 
+
 class Task(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):
     pass
+
 
 class TaxRate(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
     pass
 
+
 class TextMessage(InvoicedObject):
     pass
+
 
 class Transaction(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
@@ -409,7 +430,7 @@ class Transaction(CreateableObject, DeleteableObject, ListableObject,
         return util.convert_to_object(self, response['body'])
 
     def initiate_charge(self, idempotency_key=None, **params):
-        endpoint = self._endpoint='/charges'
+        endpoint = self._endpoint_base+'/charges'
         opts = {'idempotency_key': idempotency_key}
         response = self._client.request('POST', endpoint, params, opts)
 

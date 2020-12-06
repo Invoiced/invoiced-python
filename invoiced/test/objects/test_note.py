@@ -16,7 +16,9 @@ class TestNote(unittest.TestCase):
     def test_create(self):
         responses.add('POST', 'https://api.invoiced.com/notes',
                       status=201,
-                      json={"id": 123, "customer": 234, "notes": "Contents of note"})
+                      json={"id": 123,
+                            "customer": 234,
+                            "notes": "Contents of note"})
 
         note = invoiced.Note(self.client)
         note = note.create(customer_id=234, notes="Contents of note")
@@ -30,7 +32,9 @@ class TestNote(unittest.TestCase):
     def test_retrieve(self):
         responses.add('GET', 'https://api.invoiced.com/notes/123',
                       status=200,
-                      json={"id": 123, "customer": 234, "notes": "Contents of note"})
+                      json={"id": 123,
+                            "customer": 234,
+                            "notes": "Contents of note"})
 
         note = invoiced.Note(self.client)
         note = note.retrieve(123)
@@ -59,7 +63,10 @@ class TestNote(unittest.TestCase):
     def test_list(self):
         responses.add('GET', 'https://api.invoiced.com/notes',
                       status=200,
-                      json=[{"id": 123, "customer": 234, "notes": "Contents of note"}],
+                      json=[{
+                          "id": 123,
+                          "customer": 234,
+                          "notes": "Contents of note"}],
                       adding_headers={
                         'x-total-count': '15',
                         'link': '<https://api.invoiced.com/notes?per_page=25&page=1>; rel="self", <https://api.invoiced.com/notes?per_page=25&page=1>; rel="first", <https://api.invoiced.com/notes?per_page=25&page=1>; rel="last"'})  # noqa
