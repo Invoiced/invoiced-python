@@ -22,6 +22,14 @@ class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
                   UpdateableObject):
     pass
 
+class Charge(InvoicedObject):
+    def create(self, idempotency_key=None, **params):
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', self.endpoint(), params, opts)
+        payment = Payment(self._client)
+
+        return util.convert_to_object(payment, response['body'])
+
 class Contact(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
     pass
@@ -307,6 +315,18 @@ class Note(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):
     pass
 
+class Payment(CreateableObject, DeleteableObject, ListableObject,
+              UpdateableObject):
+
+    def send(self, idempotency_key=None, **params):
+        endpoint = self.endpoint()+"/emails"
+        opts = {'idempotency_key': idempotency_key}
+        response = self._client.request('POST', endpoint, params, opts)
+
+        # build email objects
+        email = Email(self._client)
+        return util.build_objects(email, response['body'])
+
 class PaymentPlan(DeleteableObject):
 
     def __init__(self, client, id=None, values={}):
@@ -348,6 +368,15 @@ class Subscription(CreateableObject, DeleteableObject, ListableObject,
         repsonse = self._client.request('POST', self.endpoint(), params)
 
         return repsonse['body']
+
+class Refund(InvoicedObject):
+
+    def create(self, charge_id, idempotency_key=None, **params):
+        opts = {'idempotency_key': idempotency_key}
+        endpoint = self.endpoint_base()+"/charges/"+str(charge_id)+"/refunds"
+        response = self._client.request('POST', endpoint, params, opts)
+
+        return util.convert_to_object(self, response['body'])
 
 class Task(CreateableObject, DeleteableObject, ListableObject,
            UpdateableObject):

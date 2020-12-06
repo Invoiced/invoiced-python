@@ -1,5 +1,6 @@
 from invoiced.objects import (
     CatalogItem,
+    Charge,
     Coupon,
     CreditNote,
     Customer,
@@ -7,14 +8,14 @@ from invoiced.objects import (
     Event,
     File,
     Invoice,
-    Letter,
     Note,
+    Payment,
     Plan,
+    Refund,
+    Subscription,
     Task,
     TaxRate,
-    TextMessage,
-    Transaction,
-    Subscription)
+    Transaction)
 from invoiced import errors, util, version
 import json
 import requests
@@ -36,6 +37,7 @@ class Client(object):
 
         # Object endpoints
         self.CatalogItem = CatalogItem(self)
+        self.Charge = Charge(self)
         self.Coupon = Coupon(self)
         self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
@@ -44,7 +46,9 @@ class Client(object):
         self.File = File(self)
         self.Invoice = Invoice(self)
         self.Note = Note(self)
+        self.Payment = Payment(self)
         self.Plan = Plan(self)
+        self.Refund = Refund(self)
         self.Subscription = Subscription(self)
         self.Task = Task(self)
         self.TaxRate = TaxRate(self)

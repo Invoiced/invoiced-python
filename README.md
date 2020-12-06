@@ -36,10 +36,14 @@ Then, API calls can be made like this:
 invoice = client.Invoice.retrieve("{INVOICE_ID}")
 
 # mark as paid
-transaction = client.Transaction.create(
-    invoice= invoice.id,
+payment = client.Payment.create(
     amount= invoice.balance,
-    method= "check")
+    method= "check",
+    applied_to= {
+        'type': 'invoice',
+        'invoice': invoice.id,
+        'amount': invoice.balance
+    })
 ```
 
 If you want to use the sandbox API instead then you must set the second argument on the client to `True` like this:
