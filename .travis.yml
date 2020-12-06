@@ -16,7 +16,7 @@ install:
 script:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then python -m coverage run setup.py test; fi
   - if [[ $TRAVIS_PYTHON_VERSION != '3.4' ]]; then python setup.py test; fi
-  - flake8
+  - flake8 invoiced
 
 after_success:
   - if [[ $TRAVIS_PYTHON_VERSION == '3.4' ]]; then coveralls; fi
