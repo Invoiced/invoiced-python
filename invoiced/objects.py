@@ -21,11 +21,6 @@ class Card(PaymentSourceObject, DeleteableObject):
     pass
 
 
-class CatalogItem(CreateableObject, DeleteableObject, ListableObject,
-                  UpdateableObject):
-    pass
-
-
 class Charge(InvoicedObject):
     def create(self, idempotency_key=None, **params):
         opts = {'idempotency_key': idempotency_key}
@@ -311,6 +306,11 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
         self.refresh_from(response['body'])
 
         return response['code'] == 200
+
+
+class Item(CreateableObject, DeleteableObject, ListableObject,
+                  UpdateableObject):
+    pass
 
 
 class Letter(InvoicedObject):

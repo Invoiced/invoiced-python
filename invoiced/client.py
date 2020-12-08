@@ -1,5 +1,5 @@
 from invoiced.objects import (
-    CatalogItem,
+    Item,
     Charge,
     Coupon,
     CreditNote,
@@ -36,7 +36,7 @@ class Client(object):
         self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
 
         # Object endpoints
-        self.CatalogItem = CatalogItem(self)
+        self.Item = Item(self)
         self.Charge = Charge(self)
         self.Coupon = Coupon(self)
         self.CreditNote = CreditNote(self)

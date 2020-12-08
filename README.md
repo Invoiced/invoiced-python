@@ -66,6 +66,5 @@ The package can be uploaded to pypi with the following commands:
 
 ```
 python setup.py sdist
-python setup.py bdist_wheel
 twine upload dist/*
 ```
