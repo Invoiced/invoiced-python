@@ -309,7 +309,7 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
 
 
 class Item(CreateableObject, DeleteableObject, ListableObject,
-                  UpdateableObject):
+           UpdateableObject):
     pass
 
 
