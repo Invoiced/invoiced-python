@@ -7,6 +7,7 @@ from invoiced.objects import (  # noqa
     Charge,
     Contact,
     Coupon,
+    CreditBalanceAdjustment,
     CreditNote,
     Customer,
     Email,

@@ -2,6 +2,7 @@ from invoiced.objects import (
     Item,
     Charge,
     Coupon,
+    CreditBalanceAdjustment,
     CreditNote,
     Customer,
     Estimate,
@@ -38,6 +39,7 @@ class Client(object):
         self.Item = Item(self)
         self.Charge = Charge(self)
         self.Coupon = Coupon(self)
+        self.CreditBalanceAdjustment = CreditBalanceAdjustment(self)
         self.CreditNote = CreditNote(self)
         self.Customer = Customer(self)
         self.Estimate = Estimate(self)

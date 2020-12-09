@@ -30,6 +30,11 @@ class Charge(InvoicedObject):
         return util.convert_to_object(payment, response['body'])
 
 
+class CreditBalanceAdjustment(CreateableObject, DeleteableObject,
+                              ListableObject, UpdateableObject):
+    pass
+
+
 class Contact(CreateableObject, DeleteableObject, ListableObject,
               UpdateableObject):
     pass
