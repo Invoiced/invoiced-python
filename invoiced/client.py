@@ -14,8 +14,7 @@ from invoiced.objects import (
     Refund,
     Subscription,
     Task,
-    TaxRate,
-    Transaction)
+    TaxRate)
 from invoiced import errors, util, version
 import json
 import requests
@@ -52,7 +51,6 @@ class Client(object):
         self.Subscription = Subscription(self)
         self.Task = Task(self)
         self.TaxRate = TaxRate(self)
-        self.Transaction = Transaction(self)
 
     def request(self, method, endpoint, params={}, opts={}):
         url = self.api_url + endpoint

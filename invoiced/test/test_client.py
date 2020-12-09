@@ -14,7 +14,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual('https://api.invoiced.com', client.api_url)
         self.assertIsInstance(client.Customer, invoiced.Customer)
         self.assertIsInstance(client.Invoice, invoiced.Invoice)
-        self.assertIsInstance(client.Transaction, invoiced.Transaction)
         self.assertIsInstance(client.Subscription, invoiced.Subscription)
 
     def test_new_client_sandbox(self):
@@ -24,7 +23,6 @@ class TestClient(unittest.TestCase):
         self.assertEqual('https://api.sandbox.invoiced.com', client.api_url)
         self.assertIsInstance(client.Customer, invoiced.Customer)
         self.assertIsInstance(client.Invoice, invoiced.Invoice)
-        self.assertIsInstance(client.Transaction, invoiced.Transaction)
         self.assertIsInstance(client.Subscription, invoiced.Subscription)
 
     @responses.activate

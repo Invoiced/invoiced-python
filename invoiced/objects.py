@@ -408,30 +408,3 @@ class TaxRate(CreateableObject, DeleteableObject, ListableObject,
 
 class TextMessage(InvoicedObject):
     pass
-
-
-class Transaction(CreateableObject, DeleteableObject, ListableObject,
-                  UpdateableObject):
-
-    def send(self, idempotency_key=None, **params):
-        endpoint = self.endpoint()+"/emails"
-        opts = {'idempotency_key': idempotency_key}
-        response = self._client.request('POST', endpoint, params, opts)
-
-        # build email objects
-        email = Email(self._client)
-        return util.build_objects(email, response['body'])
-
-    def refund(self, idempotency_key=None, **params):
-        endpoint = self.endpoint()+"/refunds"
-        opts = {'idempotency_key': idempotency_key}
-        response = self._client.request('POST', endpoint, params, opts)
-
-        return util.convert_to_object(self, response['body'])
-
-    def initiate_charge(self, idempotency_key=None, **params):
-        endpoint = self._endpoint_base+'/charges'
-        opts = {'idempotency_key': idempotency_key}
-        response = self._client.request('POST', endpoint, params, opts)
-
-        return util.convert_to_object(self, response['body'])

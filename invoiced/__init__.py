@@ -26,6 +26,5 @@ from invoiced.objects import (  # noqa
     Subscription,
     Task,
     TaxRate,
-    TextMessage,
-    Transaction)
+    TextMessage)
 from invoiced.operations import List  # noqa
