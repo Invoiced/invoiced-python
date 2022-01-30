@@ -25,6 +25,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install dependencies
+        run: |
+          python setup.py install
+
       - name: Tests
         run: |
           python -m unittest
@@ -50,6 +54,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python setup.py install
           pip install python-coveralls coverage
 
       - name: Tests
