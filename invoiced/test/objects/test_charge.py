@@ -1,6 +1,8 @@
 import unittest
-import invoiced
+
 import responses
+
+import invoiced
 
 
 class TestCharge(unittest.TestCase):
@@ -19,11 +21,11 @@ class TestCharge(unittest.TestCase):
                       status=201,
                       json={"id": "a1b2c3",
                             "amount": 100,
-                            "object": "charge"})
+                            "object": "payment"})
 
-        charge = self.client.Charge.create(amount=100,
-                                           payment_source_type="card")
+        payment = self.client.Charge.create(amount=100,
+                                            payment_source_type="card")
 
-        self.assertIsInstance(charge, invoiced.Payment)
-        self.assertEqual(charge.id, "a1b2c3")
-        self.assertEqual(charge.object, "charge")
+        self.assertIsInstance(payment, invoiced.Payment)
+        self.assertEqual(payment.id, "a1b2c3")
+        self.assertEqual(payment.object, "payment")

@@ -1,6 +1,7 @@
-import unittest
-import invoiced
 import sys
+import unittest
+
+import invoiced
 
 
 class TestObject(unittest.TestCase):
