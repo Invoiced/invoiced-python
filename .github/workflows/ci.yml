@@ -25,6 +25,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install dependencies
+        run: |
+          pip install wheel
+
       - name: Tests
         run: |
           python setup.py test
@@ -50,7 +54,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install python-coveralls coverage
+          pip install wheel python-coveralls coverage
 
       - name: Tests
         run: |
