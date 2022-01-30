@@ -3,7 +3,7 @@ invoiced-python
 
 This repository contains the Python client library for the [Invoiced](https://invoiced.com) API.
 
-[![Build Status](https://travis-ci.com/Invoiced/invoiced-python.svg?branch=master)](https://travis-ci.com/Invoiced/invoiced-python)
+[![CI](https://github.com/Invoiced/invoiced-python/actions/workflows/ci.yml/badge.svg)](https://github.com/Invoiced/invoiced-python/actions/workflows/ci.yml)
 [![Coverage Status](https://coveralls.io/repos/Invoiced/invoiced-python/badge.svg?branch=master&service=github)](https://coveralls.io/github/Invoiced/invoiced-python?branch=master)
 [![PyPI version](https://badge.fury.io/py/invoiced.svg)](https://badge.fury.io/py/invoiced)
 
