@@ -27,7 +27,7 @@ jobs:
 
       - name: Tests
         run: |
-          python setup.py test
+          python -m unittest
 
       - name: Flake8
         run: |
@@ -50,11 +50,11 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install python-coveralls
+          pip install python-coveralls coverage
 
       - name: Tests
         run: |
-          python -m coverage run setup.py test
+          python -m coverage run -m unittest
 
       - name: Upload coverage results to Coveralls
         if: ${{ github.event_name == 'push' }}
