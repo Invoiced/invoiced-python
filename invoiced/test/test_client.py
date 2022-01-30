@@ -208,7 +208,3 @@ class TestClient(unittest.TestCase):
 
         with self.assertRaises(invoiced.errors.ApiError):
             client.request("POST", "/invoices")
-
-
-if __name__ == '__main__':
-    unittest.main()

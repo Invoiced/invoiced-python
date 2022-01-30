@@ -111,7 +111,7 @@ class PaymentSourceObject(InvoicedObject):
     pass
 
 
-class CreateableObject(InvoicedObject):
+class CreatableObject(InvoicedObject):
 
     def create(self, idempotency_key=None, **params):
         opts = {'idempotency_key': idempotency_key}
@@ -120,7 +120,7 @@ class CreateableObject(InvoicedObject):
         return util.convert_to_object(self, response['body'])
 
 
-class DeleteableObject(InvoicedObject):
+class DeletableObject(InvoicedObject):
 
     def delete(self):
         response = self._client.request('DELETE', self.endpoint())
@@ -149,7 +149,7 @@ class ListableObject(InvoicedObject):
         return objects, metadata
 
 
-class UpdateableObject(InvoicedObject):
+class UpdatableObject(InvoicedObject):
 
     def save(self, idempotency_key=None, **params):
         update = {}

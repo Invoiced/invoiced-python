@@ -1,10 +1,10 @@
 from invoiced.operations import (
     InvoicedObject,
     PaymentSourceObject,
-    CreateableObject,
-    DeleteableObject,
+    CreatableObject,
+    DeletableObject,
     ListableObject,
-    UpdateableObject,
+    UpdatableObject,
     List)
 from invoiced import util
 
@@ -13,11 +13,11 @@ class Attachment(InvoicedObject):
     pass
 
 
-class BankAccount(PaymentSourceObject, DeleteableObject):
+class BankAccount(PaymentSourceObject, DeletableObject):
     pass
 
 
-class Card(PaymentSourceObject, DeleteableObject):
+class Card(PaymentSourceObject, DeletableObject):
     pass
 
 
@@ -30,23 +30,23 @@ class Charge(InvoicedObject):
         return util.convert_to_object(payment, response['body'])
 
 
-class CreditBalanceAdjustment(CreateableObject, DeleteableObject,
-                              ListableObject, UpdateableObject):
+class CreditBalanceAdjustment(CreatableObject, DeletableObject,
+                              ListableObject, UpdatableObject):
     pass
 
 
-class Contact(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+class Contact(CreatableObject, DeletableObject, ListableObject,
+              UpdatableObject):
     pass
 
 
-class Coupon(CreateableObject, DeleteableObject, ListableObject,
-             UpdateableObject):
+class Coupon(CreatableObject, DeletableObject, ListableObject,
+             UpdatableObject):
     pass
 
 
-class CreditNote(CreateableObject, DeleteableObject, ListableObject,
-                 UpdateableObject):
+class CreditNote(CreatableObject, DeletableObject, ListableObject,
+                 UpdatableObject):
 
     def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
@@ -88,8 +88,8 @@ class CreditNote(CreateableObject, DeleteableObject, ListableObject,
         return response['code'] == 200
 
 
-class Customer(CreateableObject, DeleteableObject, ListableObject,
-               UpdateableObject):
+class Customer(CreatableObject, DeletableObject, ListableObject,
+               UpdatableObject):
 
     def send_statement(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
@@ -170,8 +170,8 @@ class Email(InvoicedObject):
     pass
 
 
-class Estimate(CreateableObject, DeleteableObject, ListableObject,
-               UpdateableObject):
+class Estimate(CreatableObject, DeletableObject, ListableObject,
+               UpdatableObject):
 
     def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
@@ -226,12 +226,12 @@ class Event(ListableObject):
     pass
 
 
-class File(CreateableObject, DeleteableObject):
+class File(CreatableObject, DeletableObject):
     pass
 
 
-class Invoice(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+class Invoice(CreatableObject, DeletableObject, ListableObject,
+              UpdatableObject):
 
     def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
@@ -313,8 +313,8 @@ class Invoice(CreateableObject, DeleteableObject, ListableObject,
         return response['code'] == 200
 
 
-class Item(CreateableObject, DeleteableObject, ListableObject,
-           UpdateableObject):
+class Item(CreatableObject, DeletableObject, ListableObject,
+           UpdatableObject):
     pass
 
 
@@ -322,18 +322,18 @@ class Letter(InvoicedObject):
     pass
 
 
-class LineItem(CreateableObject, DeleteableObject, ListableObject,
-               UpdateableObject):
+class LineItem(CreatableObject, DeletableObject, ListableObject,
+               UpdatableObject):
     pass
 
 
-class Note(CreateableObject, DeleteableObject, ListableObject,
-           UpdateableObject):
+class Note(CreatableObject, DeletableObject, ListableObject,
+           UpdatableObject):
     pass
 
 
-class Payment(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+class Payment(CreatableObject, DeletableObject, ListableObject,
+              UpdatableObject):
 
     def send(self, idempotency_key=None, **params):
         endpoint = self.endpoint()+"/emails"
@@ -345,7 +345,7 @@ class Payment(CreateableObject, DeleteableObject, ListableObject,
         return util.build_objects(email, response['body'])
 
 
-class PaymentPlan(DeleteableObject):
+class PaymentPlan(DeletableObject):
 
     def __init__(self, client, id=None, values={}):
         super().__init__(client, id, values)
@@ -369,17 +369,17 @@ class PaymentPlan(DeleteableObject):
         return self.delete()
 
 
-class PaymentSource(CreateableObject, ListableObject):
+class PaymentSource(CreatableObject, ListableObject):
     pass
 
 
-class Plan(CreateableObject, DeleteableObject, ListableObject,
-           UpdateableObject):
+class Plan(CreatableObject, DeletableObject, ListableObject,
+           UpdatableObject):
     pass
 
 
-class Subscription(CreateableObject, DeleteableObject, ListableObject,
-                   UpdateableObject):
+class Subscription(CreatableObject, DeletableObject, ListableObject,
+                   UpdatableObject):
 
     def cancel(self):
         return self.delete()
@@ -401,13 +401,13 @@ class Refund(InvoicedObject):
         return util.convert_to_object(self, response['body'])
 
 
-class Task(CreateableObject, DeleteableObject, ListableObject,
-           UpdateableObject):
+class Task(CreatableObject, DeletableObject, ListableObject,
+           UpdatableObject):
     pass
 
 
-class TaxRate(CreateableObject, DeleteableObject, ListableObject,
-              UpdateableObject):
+class TaxRate(CreatableObject, DeletableObject, ListableObject,
+              UpdatableObject):
     pass
 
 

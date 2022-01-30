@@ -1,82 +1,24 @@
 import unittest
-import invoiced
 import responses
+import invoiced
+from invoiced.test.objects.operations import (
+    TestEndpoint,
+    CreatableObject,
+    RetrievableObject,
+    UpdatableObject,
+    DeletableObject,
+    ListAll
+)
 
 
-class TestCustomer(unittest.TestCase):
+class TestCustomer(TestEndpoint, CreatableObject, RetrievableObject,
+                   UpdatableObject, DeletableObject, ListAll,
+                   unittest.TestCase):
+    objectClass = invoiced.Customer
+    endpoint = '/customers'
 
     def setUp(self):
         self.client = invoiced.Client('api_key')
-
-    def test_endpoint(self):
-        customer = invoiced.Customer(self.client, 123)
-        self.assertEqual('/customers/123', customer.endpoint())
-
-    @responses.activate
-    def test_create(self):
-        responses.add('POST', 'https://api.invoiced.com/customers',
-                      status=201,
-                      json={"id": 123, "name": "Pied Piper"})
-
-        customer = self.client.Customer.create(name='Pied Piper')
-
-        self.assertIsInstance(customer, invoiced.Customer)
-        self.assertEqual(customer.id, 123)
-        self.assertEqual(customer.name, 'Pied Piper')
-
-    @responses.activate
-    def test_retrieve(self):
-        responses.add('GET', 'https://api.invoiced.com/customers/123',
-                      status=200,
-                      json={"id": "123", "name": "Pied Piper"})
-
-        customer = self.client.Customer.retrieve(123)
-
-        self.assertIsInstance(customer, invoiced.Customer)
-        self.assertEqual(customer.id, '123')
-        self.assertEqual(customer.name, 'Pied Piper')
-
-    def test_update_no_params(self):
-        customer = invoiced.Customer(self.client, 123)
-        self.assertFalse(customer.save())
-
-    @responses.activate
-    def test_update(self):
-        responses.add('PATCH', 'https://api.invoiced.com/customers/123',
-                      status=200,
-                      json={"id": 123, "name": "Pied Piper", "notes": "Terrible customer"})  # noqa
-
-        customer = invoiced.Customer(self.client, 123)
-        customer.notes = 'Terrible customer'
-        self.assertTrue(customer.save())
-
-        self.assertEqual(customer.notes, "Terrible customer")
-
-    @responses.activate
-    def test_list(self):
-        responses.add('GET', 'https://api.invoiced.com/customers',
-                      status=200,
-                      json=[{"id": 123, "name": "Pied Piper"}],
-                      adding_headers={
-                        'x-total-count': '15',
-                        'link': '<https://api.invoiced.com/customers?per_page=25&page=1>; rel="self", <https://api.invoiced.com/customers?per_page=25&page=1>; rel="first", <https://api.invoiced.com/customers?per_page=25&page=1>; rel="last"'})  # noqa
-
-        customers, metadata = self.client.Customer.list()
-
-        self.assertIsInstance(customers, list)
-        self.assertEqual(len(customers), 1)
-        self.assertEqual(customers[0].id, 123)
-
-        self.assertIsInstance(metadata, invoiced.List)
-        self.assertEqual(metadata.total_count, 15)
-
-    @responses.activate
-    def test_delete(self):
-        responses.add('DELETE', 'https://api.invoiced.com/customers/123',
-                      status=204)
-
-        customer = invoiced.Customer(self.client, 123)
-        self.assertTrue(customer.delete())
 
     @responses.activate
     def test_send_statement(self):

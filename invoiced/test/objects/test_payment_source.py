@@ -1,6 +1,8 @@
 import unittest
-import invoiced
+
 import responses
+
+import invoiced
 
 
 class TestPaymentSource(unittest.TestCase):
