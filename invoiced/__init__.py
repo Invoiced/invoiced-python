@@ -1,6 +1,7 @@
 from invoiced.client import Client  # noqa
 from invoiced.version import VERSION  # noqa
 from invoiced.objects import (  # noqa
+    Attachment,
     BankAccount,
     Card,
     Charge,
@@ -30,6 +31,7 @@ from invoiced.objects import (  # noqa
     Payment,
     PaymentMethod,
     PaymentPlan,
+    PaymentSource,
     PdfTemplate,
     Plan,
     Refund,
