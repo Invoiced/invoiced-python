@@ -58,6 +58,7 @@ jobs:
       - name: Tests
         run: |
           python -m coverage run setup.py test
+          python -m coverage report
 
       - name: Upload coverage results to Coveralls
         if: ${{ github.event_name == 'push' }}
