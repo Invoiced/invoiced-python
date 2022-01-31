@@ -1,21 +1,39 @@
 from invoiced.objects import (
-    Item,
     Charge,
     Coupon,
     CreditBalanceAdjustment,
     CreditNote,
+    CustomField,
     Customer,
+    CustomerChasingCadence,
+    EmailTemplate,
     Estimate,
     Event,
     File,
+    GlAccount,
+    Inbox,
     Invoice,
+    InvoiceChasingCadence,
+    Item,
+    LateFeeSchedule,
+    Member,
+    MerchantAccount,
     Note,
     Payment,
+    PaymentMethod,
+    PdfTemplate,
     Plan,
     Refund,
+    Report,
+    Role,
+    SignUpPage,
+    SmsTemplate,
     Subscription,
     Task,
-    TaxRate)
+    TaxRate,
+    TaxRule,
+    Theme,
+    Webhook)
 from invoiced import errors, util, version
 import json
 import requests
@@ -36,23 +54,41 @@ class Client(object):
         self.api_url = self.ApiBaseSandbox if sandbox else self.ApiBase
 
         # Object endpoints
-        self.Item = Item(self)
         self.Charge = Charge(self)
         self.Coupon = Coupon(self)
         self.CreditBalanceAdjustment = CreditBalanceAdjustment(self)
         self.CreditNote = CreditNote(self)
+        self.CustomField = CustomField(self)
         self.Customer = Customer(self)
+        self.CustomerChasingCadence = CustomerChasingCadence(self)
+        self.EmailTemplate = EmailTemplate(self)
         self.Estimate = Estimate(self)
         self.Event = Event(self)
         self.File = File(self)
+        self.GlAccount = GlAccount(self)
+        self.Inbox = Inbox(self)
         self.Invoice = Invoice(self)
+        self.InvoiceChasingCadence = InvoiceChasingCadence(self)
+        self.Item = Item(self)
+        self.LateFeeSchedule = LateFeeSchedule(self)
+        self.Member = Member(self)
+        self.MerchantAccount = MerchantAccount(self)
         self.Note = Note(self)
         self.Payment = Payment(self)
+        self.PaymentMethod = PaymentMethod(self)
+        self.PdfTemplate = PdfTemplate(self)
         self.Plan = Plan(self)
         self.Refund = Refund(self)
+        self.Report = Report(self)
+        self.Role = Role(self)
+        self.SignUpPage = SignUpPage(self)
+        self.SmsTemplate = SmsTemplate(self)
         self.Subscription = Subscription(self)
         self.Task = Task(self)
         self.TaxRate = TaxRate(self)
+        self.TaxRule = TaxRule(self)
+        self.Theme = Theme(self)
+        self.Webhook = Webhook(self)
 
     def request(self, method, endpoint, params={}, opts={}):
         url = self.api_url + endpoint

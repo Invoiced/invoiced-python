@@ -88,6 +88,11 @@ class CreditNote(CreatableObject, DeletableObject, ListableObject,
         return response['code'] == 200
 
 
+class CustomField(CreatableObject, DeletableObject,
+                  ListableObject, UpdatableObject):
+    pass
+
+
 class Customer(CreatableObject, DeletableObject, ListableObject,
                UpdatableObject):
 
@@ -166,7 +171,17 @@ class Customer(CreatableObject, DeletableObject, ListableObject,
         return util.convert_to_object(invoice, response['body'])
 
 
+class CustomerChasingCadence(CreatableObject, DeletableObject,
+                             ListableObject, UpdatableObject):
+    pass
+
+
 class Email(InvoicedObject):
+    pass
+
+
+class EmailTemplate(CreatableObject, DeletableObject,
+                    ListableObject, UpdatableObject):
     pass
 
 
@@ -227,6 +242,15 @@ class Event(ListableObject):
 
 
 class File(CreatableObject, DeletableObject):
+    pass
+
+
+class GlAccount(CreatableObject, DeletableObject,
+                ListableObject, UpdatableObject):
+    pass
+
+
+class Inbox(ListableObject):
     pass
 
 
@@ -313,8 +337,18 @@ class Invoice(CreatableObject, DeletableObject, ListableObject,
         return response['code'] == 200
 
 
+class InvoiceChasingCadence(CreatableObject, DeletableObject,
+                            ListableObject, UpdatableObject):
+    pass
+
+
 class Item(CreatableObject, DeletableObject, ListableObject,
            UpdatableObject):
+    pass
+
+
+class LateFeeSchedule(CreatableObject, DeletableObject,
+                      ListableObject, UpdatableObject):
     pass
 
 
@@ -324,6 +358,16 @@ class Letter(InvoicedObject):
 
 class LineItem(CreatableObject, DeletableObject, ListableObject,
                UpdatableObject):
+    pass
+
+
+class Member(CreatableObject, DeletableObject,
+             ListableObject, UpdatableObject):
+    pass
+
+
+class MerchantAccount(CreatableObject, DeletableObject,
+                      ListableObject, UpdatableObject):
     pass
 
 
@@ -343,6 +387,10 @@ class Payment(CreatableObject, DeletableObject, ListableObject,
         # build email objects
         email = Email(self._client)
         return util.build_objects(email, response['body'])
+
+
+class PaymentMethod(ListableObject, UpdatableObject):
+    pass
 
 
 class PaymentPlan(DeletableObject):
@@ -373,8 +421,42 @@ class PaymentSource(CreatableObject, ListableObject):
     pass
 
 
+class PdfTemplate(CreatableObject, DeletableObject,
+                  ListableObject, UpdatableObject):
+    pass
+
+
 class Plan(CreatableObject, DeletableObject, ListableObject,
            UpdatableObject):
+    pass
+
+
+class Refund(InvoicedObject):
+
+    def create(self, charge_id, idempotency_key=None, **params):
+        opts = {'idempotency_key': idempotency_key}
+        endpoint = self.endpoint_base()+"/charges/"+str(charge_id)+"/refunds"
+        response = self._client.request('POST', endpoint, params, opts)
+
+        return util.convert_to_object(self, response['body'])
+
+
+class Report(CreatableObject):
+    pass
+
+
+class Role(CreatableObject, DeletableObject,
+           ListableObject, UpdatableObject):
+    pass
+
+
+class SignUpPage(CreatableObject, DeletableObject,
+                 ListableObject, UpdatableObject):
+    pass
+
+
+class SmsTemplate(CreatableObject, DeletableObject,
+                  ListableObject, UpdatableObject):
     pass
 
 
@@ -391,16 +473,6 @@ class Subscription(CreatableObject, DeletableObject, ListableObject,
         return repsonse['body']
 
 
-class Refund(InvoicedObject):
-
-    def create(self, charge_id, idempotency_key=None, **params):
-        opts = {'idempotency_key': idempotency_key}
-        endpoint = self.endpoint_base()+"/charges/"+str(charge_id)+"/refunds"
-        response = self._client.request('POST', endpoint, params, opts)
-
-        return util.convert_to_object(self, response['body'])
-
-
 class Task(CreatableObject, DeletableObject, ListableObject,
            UpdatableObject):
     pass
@@ -411,5 +483,20 @@ class TaxRate(CreatableObject, DeletableObject, ListableObject,
     pass
 
 
+class TaxRule(CreatableObject, DeletableObject,
+              ListableObject, UpdatableObject):
+    pass
+
+
 class TextMessage(InvoicedObject):
+    pass
+
+
+class Theme(CreatableObject, DeletableObject, ListableObject,
+            UpdatableObject):
+    pass
+
+
+class Webhook(CreatableObject, DeletableObject, ListableObject,
+              UpdatableObject):
     pass
