@@ -66,5 +66,5 @@ The package can be uploaded to pypi with the following commands:
 
 ```
 python setup.py sdist
-twine upload dist/*
+twine upload dist/* --repository invoiced
 ```
