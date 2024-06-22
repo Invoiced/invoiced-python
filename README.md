@@ -17,7 +17,7 @@ pip install invoiced
 
 ## Requirements
 
-- Python 3.4+
+- Python 3.7+
 - `requests` and `inflection` libraries
 
 ## Usage
