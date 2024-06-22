@@ -36,7 +36,7 @@ setup(
         'requests': ['security>=2.0.0']
     },
     test_suite='invoiced.test.all',
-    tests_require=['responses == 0.5.0'],
+    tests_require=['responses >= 0.5.0'],
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
