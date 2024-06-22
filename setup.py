@@ -30,7 +30,7 @@ setup(
     packages=['invoiced', 'invoiced.test'],
     install_requires=[
         'requests >= 2.0.0',
-        'inflection >= 0.3.1'
+        'inflection >= 0.5.1'
     ],
     extras_require={
         'requests': ['security>=2.0.0']
