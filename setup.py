@@ -1,11 +1,7 @@
 import os
 import sys
 import warnings
-
-try:
-    from setuptools import setup
-except ImportError:
-    from distutils.core import setup
+from setuptools import setup
 
 path, script = os.path.split(sys.argv[0])
 os.chdir(os.path.abspath(path))
